@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Games – Greg's Best of the Web 1.0</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="bestoftheweb.css">
+</head>
+<body>
+
+  <div class="wrap-page">
+
+    <!-- Header -->
+    <div id="site-header" class="site-header"></div>
+
+    <main>
+      <h2 class="page-title">Games</h2>
+
+      <div class="layout">
+
+        <!-- MAIN CONTENT -->
+        <section class="main-content">
+
+          <p class="center">
+            PC, browser and other time-waster games that are actually worth loading.
+          </p>
+
+          <div id="game-groups">
+            <!-- JS fills this -->
+          </div>
+
+        </section>
+
+        <!-- SIDEBAR -->
+        <aside id="site-sidebar" class="sidebar"></aside>
+
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <div id="site-footer" class="site-footer"></div>
+
+  </div>
+
+  <script src="includes.js"></script>
+
+  <script>
+    const GAMES_JSON = "games-gallery.json";
+
+    async function loadGames() {
+      const container = document.getElementById("game-groups");
+      if (!container) return;
+
+      try {
+        const res = await fetch(GAMES_JSON + "?v=" + Date.now());
+        if (!res.ok) throw new Error(res.status + " " + res.statusText);
+        const games = await res.json();
+        if (!Array.isArray(games) || !games.length) {
+          container.innerHTML = "<p class='center'><small>No games listed yet.</small></p>";
+          return;
+        }
+
+        // Group by category (PC, Browser, Retro, etc.)
+        const groups = {};
+        games.forEach(game => {
+          const cat = game.category || "Other";
+          if (!groups[cat]) groups[cat] = [];
+          groups[cat].push(game);
+        });
+
+        // Sort each group by name
+        Object.keys(groups).forEach(cat => {
+          groups[cat].sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+        });
+
+        const categories = Object.keys(groups).sort();
+        container.innerHTML = "";
+
+        categories.forEach(cat => {
+          const groupDiv = document.createElement("div");
+          groupDiv.className = "game-group";
+          groupDiv.innerHTML = `<h3 class="game-group-title">${cat}</h3>`;
+
+          const listDiv = document.createElement("div");
+          listDiv.className = "game-list";
+
+          groups[cat].forEach(game => {
+            const card = document.createElement("article");
+            card.className = "game-card";
+
+            const iconSrc = game.icon || "pics/games/game-default.png";
+            const platform = game.platform || "";
+            const label = game.label || "";
+
+            card.innerHTML = `
+              <div class="game-icon">
+                <img src="${iconSrc}" alt="">
+              </div>
+              <div class="game-body">
+                <h4 class="game-name">
+                  <a href="${game.url}" target="_blank" rel="noopener">
+                    ${game.name || "Unnamed game"}
+                  </a>
+                </h4>
+                <p class="game-desc">${game.description || ""}</p>
+                <div class="game-meta">
+                  ${platform ? `<span class="game-tag">${platform}</span>` : ""}
+                  ${label ? `<span class="game-tag game-tag-accent">${label}</span>` : ""}
+                  <a class="game-link" href="${game.url}" target="_blank" rel="noopener">
+                    Play / Info
+                  </a>
+                </div>
+              </div>
+            `;
+
+            listDiv.appendChild(card);
+          });
+
+          groupDiv.appendChild(listDiv);
+          container.appendChild(groupDiv);
+        });
+
+      } catch (err) {
+        console.error("Failed to load games JSON", err);
+        container.innerHTML = "<p class='center'><small>Could not load games.</small></p>";
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", loadGames);
+  </script>
+
+</body>
+</html>

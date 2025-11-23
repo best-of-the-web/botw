@@ -1,0 +1,17 @@
+<div class="center" style="margin-top:20px;font-size:11px;">
+<button onclick="randomLink()">Random Link</button>
+<script>
+async function randomLink() {
+  const res = await fetch('links.json');
+  const items = await res.json();
+  const pick = items[Math.floor(Math.random() * items.length)];
+  window.location = pick.url;
+}
+</script>
+
+  <hr>
+ <a href='http://www.freevisitorcounters.com'>Freevisitorcounters</a> <script type='text/javascript' src='https://www.freevisitorcounters.com/auth.php?id=e58ddd249115a73102986f45d8d1d5ed30adf79b'></script>
+<script type="text/javascript" src="https://www.freevisitorcounters.com/en/home/counter/1443941/t/9"></script>
+<p>Updated: <script>document.write(new Date().toDateString())</script></p>
+  <p>© 2025 Greg – Best of the Web 1.0</p>
+</div>

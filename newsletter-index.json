@@ -1,0 +1,42 @@
+{
+  "latest": 8,
+  "issues": [
+    {
+      "id": 8,
+      "date": "2025-11-29",
+      "title": "Week 48 — Quiet But Golden",
+      "intro": "A shorter one this week — three brilliant picks worth your time.",
+      "sections": [
+        {
+          "heading": "Videos",
+          "items": [
+            {
+              "title": "Lindsey Buckingham – Big Love (Live)",
+              "url": "https://youtu.be/example",
+              "notes": "Insanely good acoustic performance.",
+              "thumb": ""
+            }
+          ]
+        },
+        {
+          "heading": "Tools",
+          "items": [
+            {
+              "title": "ShareX",
+              "url": "https://getsharex.com",
+              "notes": "Better than Snipping Tool forever.",
+              "thumb": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "date": "2025-11-22",
+      "title": "Week 47 — Tools, Tunes & Two Strange Websites",
+      "intro": "This week: ShareX, Donny Benét, a cursed AI link, and something unexpectedly wholesome.",
+      "sections": []
+    }
+  ]
+}

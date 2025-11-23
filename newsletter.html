@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Newsletter – Greg's Best of the Web 1.0</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="bestoftheweb.css">
+</head>
+<body>
+
+<div class="wrap-page">
+
+  <!-- Header -->
+  <div id="site-header" class="site-header"></div>
+
+  <main>
+    <h2 class="page-title">Newsletter</h2>
+
+    <div class="layout">
+
+      <!-- MAIN CONTENT -->
+      <section class="main-content">
+
+        <!-- HERO (latest issue) -->
+        <div id="newsletter-hero" class="newsletter-hero"></div>
+
+        <!-- ISSUE VIEWER -->
+        <div id="newsletter-issue"></div>
+
+        <!-- ARCHIVE -->
+        <h3 class="section-title">Archive</h3>
+        <div id="newsletter-archive"></div>
+
+      </section>
+
+      <aside id="site-sidebar" class="sidebar"></aside>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <div id="site-footer" class="site-footer"></div>
+
+</div>
+
+<script src="includes.js"></script>
+
+<script>
+  const NEWSLETTER_JSON = "newsletter-index.json";
+
+  async function loadNewsletter() {
+    const heroEl = document.getElementById("newsletter-hero");
+    const issueEl = document.getElementById("newsletter-issue");
+    const archiveEl = document.getElementById("newsletter-archive");
+
+    let data = null;
+    try {
+      data = await fetch(NEWSLETTER_JSON + "?v=" + Date.now()).then(r => r.json());
+    } catch (e) {
+      heroEl.innerHTML = "<p><small>Could not load newsletter.</small></p>";
+      return;
+    }
+
+    const issueId = parseInt(new URLSearchParams(location.search).get("issue"), 10);
+    const latestId = data.latest;
+    const issue = data.issues.find(i => i.id === (issueId || latestId));
+    const latest = data.issues.find(i => i.id === latestId);
+
+    renderHero(heroEl, latest);
+    renderIssue(issueEl, issue);
+    renderArchive(archiveEl, data.issues);
+  }
+
+  function renderHero(el, issue) {
+    if (!issue) return;
+    el.innerHTML = `
+      <div class="newsletter-hero-card">
+        <h3>Issue #${issue.id} — ${issue.date}</h3>
+        <h2>${issue.title}</h2>
+        <p>${issue.intro || ""}</p>
+        <div class="row">
+          <a class="btn btn-newsletter" href="newsletter.html?issue=${issue.id}">Read Issue</a>
+          <button class="btn" id="copy-email">Copy Email Version</button>
+        </div>
+      </div>
+    `;
+    setTimeout(() => {
+      const btn = document.getElementById("copy-email");
+      if (btn) btn.addEventListener("click", () => copyEmailVersion(issue));
+    }, 50);
+  }
+
+  function renderIssue(el, issue) {
+    if (!issue) return;
+
+    let html = `<h3 id="issue-title">Issue #${issue.id} — ${issue.date}</h3>`;
+    html += `<h2>${issue.title}</h2>`;
+    html += `<p>${issue.intro || ""}</p>`;
+
+    issue.sections.forEach(section => {
+      html += `<h3 class="newsletter-section">${section.heading}</h3>`;
+      section.items.forEach(item => {
+        html += `
+          <div class="newsletter-item">
+            <h4><a href="${item.url}" target="_blank">${item.title}</a></h4>
+            <p>${item.notes || ""}</p>
+          </div>
+        `;
+      });
+    });
+
+    el.innerHTML = html;
+  }
+
+  function renderArchive(el, issues) {
+    let html = `<div class="newsletter-archive-grid">`;
+    issues.forEach(issue => {
+      html += `
+        <a class="newsletter-archive-card" href="newsletter.html?issue=${issue.id}">
+          <strong>Issue #${issue.id}</strong><br>
+          <span>${issue.date}</span><br>
+          <em>${issue.title}</em>
+        </a>
+      `;
+    });
+    html += `</div>`;
+    el.innerHTML = html;
+  }
+
+  function copyEmailVersion(issue) {
+    let txt = `${issue.title} (${issue.date})\n\n`;
+    txt += (issue.intro || "") + "\n\n";
+
+    issue.sections.forEach(section => {
+      txt += section.heading.toUpperCase() + "\n";
+      section.items.forEach(item => {
+        txt += `• ${item.title}\n  ${item.notes || ""}\n\n`;
+      });
+    });
+
+    navigator.clipboard.writeText(txt).then(() => {
+      alert("Copied email version to clipboard!");
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", loadNewsletter);
+</script>
+
+</body>
+</html>

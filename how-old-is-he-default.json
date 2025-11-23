@@ -1,0 +1,74 @@
+[
+  {
+    "name": "Mel Gibson",
+    "knownFor": "1987 photo",
+    "age": 31,
+    "img": "pics/how-old-is-he/mel-gibson-1987-photo.jpg"
+  },
+  {
+    "name": "Bruce Willis",
+    "knownFor": "1988 photo",
+    "age": 33,
+    "img": "pics/how-old-is-he/bruce-willis-1988-photo.jpg"
+  },
+  {
+    "name": "Arnold Schwarzenegger",
+    "knownFor": "1991 photo",
+    "age": 44,
+    "img": "pics/how-old-is-he/arnold-schwarzenegger-1991-photo.jpg"
+  },
+  {
+    "name": "Sylvester Stallone",
+    "knownFor": "1985 photo",
+    "age": 39,
+    "img": "pics/how-old-is-he/sylvester-stallone-1985-photo.jpg"
+  },
+  {
+    "name": "Tom Selleck",
+    "knownFor": "1982 photo",
+    "age": 37,
+    "img": "pics/how-old-is-he/tom-selleck-1982-photo.jpg"
+  },
+  {
+    "name": "Clint Eastwood",
+    "knownFor": "1971 photo",
+    "age": 41,
+    "img": "pics/how-old-is-he/clint-eastwood-1971-photo.jpg"
+  },
+  {
+    "name": "Sean Connery",
+    "knownFor": "1983 photo",
+    "age": 53,
+    "img": "pics/how-old-is-he/sean-connery-1983-photo.jpg"
+  },
+  {
+    "name": "David Bowie",
+    "knownFor": "1983 photo",
+    "age": 36,
+    "img": "pics/how-old-is-he/david-bowie-1983-photo.jpg"
+  },
+  {
+    "name": "Freddie Mercury",
+    "knownFor": "1985 photo",
+    "age": 39,
+    "img": "pics/how-old-is-he/freddie-mercury-1985-photo.jpg"
+  },
+  {
+    "name": "George Michael",
+    "knownFor": "1988 photo",
+    "age": 25,
+    "img": "pics/how-old-is-he/george-michael-1988-photo.jpg"
+  },
+  {
+    "name": "Harrison Ford",
+    "knownFor": "1981 photo",
+    "age": 39,
+    "img": "pics/how-old-is-he/harrison-ford-1981-photo.jpg"
+  },
+  {
+    "name": "Al Pacino",
+    "knownFor": "1974 photo",
+    "age": 34,
+    "img": "pics/how-old-is-he/al-pacino-1974-photo.jpg"
+  }
+]

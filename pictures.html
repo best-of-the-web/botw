@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pictures – Greg's Best of the Web 1.0</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="bestoftheweb.css">
+</head>
+<body>
+
+  <div class="wrap-page">
+
+    <!-- Header include -->
+    <div id="site-header" class="site-header"></div>
+
+    <main>
+      <h2 class="page-title">Picture Gallery</h2>
+
+      <div class="layout">
+
+        <!-- MAIN CONTENT -->
+        <section class="main-content">
+
+          <p class="center">
+            Pictures from <code>/pics/how-old-is-he</code> (and future sets).
+          </p>
+
+          <!-- Category tabs -->
+          <div id="picture-tabs" class="tabs"></div>
+
+          <!-- Gallery grid -->
+          <div class="thumb-grid" id="picture-gallery">
+            <!-- JS will inject images here -->
+          </div>
+
+          <!-- Pagination -->
+          <div id="gallery-pagination" class="pagination"></div>
+
+        </section>
+
+        <!-- SIDEBAR include -->
+        <aside id="site-sidebar" class="sidebar"></aside>
+
+      </div>
+    </main>
+
+    <!-- Footer include -->
+    <div id="site-footer" class="site-footer"></div>
+
+  </div>
+
+  <script src="includes.js"></script>
+
+  <!-- Gallery logic (tabs, pagination, lightbox) -->
+  <script>
+    const PAGE_SIZE = 24; // how many thumbs per page
+    const GALLERY_JSON = "pictures-gallery.json";
+
+    let allPictures = [];
+    let currentCategory = "All";
+    let filteredPictures = [];
+    let currentPage = 1;
+    let lightboxIndex = 0; // index within filteredPictures
+
+    const tabsEl = document.getElementById("picture-tabs");
+    const galleryEl = document.getElementById("picture-gallery");
+    const paginationEl = document.getElementById("gallery-pagination");
+
+    // Lightbox elements (created after DOM load)
+    let lbEl, lbImg, lbCaption, lbPrev, lbNext, lbClose;
+
+    async function loadPictures() {
+      try {
+        const res = await fetch(GALLERY_JSON + "?v=" + Date.now());
+        if (!res.ok) throw new Error(res.status + " " + res.statusText);
+        const data = await res.json();
+        if (!Array.isArray(data)) throw new Error("JSON is not an array");
+
+        allPictures = data;
+        setupCategories();
+        setCategory("All");
+      } catch (err) {
+        console.error("Failed to load gallery JSON", err);
+        galleryEl.innerHTML = "<p><small>Could not load gallery.</small></p>";
+      }
+    }
+
+    function setupCategories() {
+      const cats = new Set();
+      allPictures.forEach(p => {
+        if (p.category) cats.add(p.category);
+      });
+
+      const categories = ["All", ...Array.from(cats).sort()];
+      tabsEl.innerHTML = categories.map(cat => `
+        <button class="tab" data-cat="${cat}">${cat}</button>
+      `).join("");
+
+      tabsEl.addEventListener("click", (e) => {
+        const btn = e.target.closest(".tab");
+        if (!btn) return;
+        setCategory(btn.dataset.cat);
+      });
+    }
+
+    function setCategory(cat) {
+      currentCategory = cat;
+      currentPage = 1;
+
+      filteredPictures = (cat === "All")
+        ? allPictures.slice()
+        : allPictures.filter(p => p.category === cat);
+
+      // update active tab
+      document.querySelectorAll(".tab").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.cat === cat);
+      });
+
+      renderGallery();
+      renderPagination();
+    }
+
+    function renderGallery() {
+      galleryEl.innerHTML = "";
+
+      if (!filteredPictures.length) {
+        galleryEl.innerHTML = "<p class='center'><small>No pictures in this category.</small></p>";
+        return;
+      }
+
+      const start = (currentPage - 1) * PAGE_SIZE;
+      const end = start + PAGE_SIZE;
+      const slice = filteredPictures.slice(start, end);
+
+      slice.forEach((pic, idx) => {
+        const globalIndex = start + idx; // index within filteredPictures
+        const div = document.createElement("div");
+        div.className = "thumb-card";
+        div.innerHTML = `
+          <img src="${pic.src}"
+               alt="${pic.title || ''}"
+               data-index="${globalIndex}"
+               class="gallery-thumb">
+          <small>${pic.title || ""}</small>
+        `;
+        galleryEl.appendChild(div);
+      });
+
+      // click handler for lightbox
+      galleryEl.querySelectorAll(".gallery-thumb").forEach(img => {
+        img.addEventListener("click", () => {
+          const idx = parseInt(img.getAttribute("data-index"), 10);
+          openLightbox(idx);
+        });
+      });
+    }
+
+    function renderPagination() {
+      paginationEl.innerHTML = "";
+      const total = filteredPictures.length;
+      if (total <= PAGE_SIZE) return;
+
+      const totalPages = Math.ceil(total / PAGE_SIZE);
+
+      const prevDisabled = (currentPage === 1) ? "disabled" : "";
+      const nextDisabled = (currentPage === totalPages) ? "disabled" : "";
+
+      paginationEl.innerHTML = `
+        <button class="page-btn" ${prevDisabled} data-dir="prev">&laquo; Prev</button>
+        <span class="page-info">Page ${currentPage} of ${totalPages}</span>
+        <button class="page-btn" ${nextDisabled} data-dir="next">Next &raquo;</button>
+      `;
+
+      paginationEl.querySelectorAll(".page-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const dir = btn.dataset.dir;
+          if (dir === "prev" && currentPage > 1) {
+            currentPage--;
+          } else if (dir === "next" && currentPage < totalPages) {
+            currentPage++;
+          }
+          renderGallery();
+          renderPagination();
+        });
+      });
+    }
+
+    // -------- Lightbox --------
+    function setupLightbox() {
+      lbEl = document.getElementById("lightbox");
+      lbImg = document.getElementById("lightbox-image");
+      lbCaption = document.getElementById("lightbox-caption");
+      lbPrev = document.getElementById("lightbox-prev");
+      lbNext = document.getElementById("lightbox-next");
+      lbClose = document.getElementById("lightbox-close");
+
+      lbPrev.addEventListener("click", () => navLightbox(-1));
+      lbNext.addEventListener("click", () => navLightbox(1));
+      lbClose.addEventListener("click", closeLightbox);
+
+      lbEl.addEventListener("click", (e) => {
+        if (e.target === lbEl) closeLightbox();
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (lbEl.classList.contains("hidden")) return;
+        if (e.key === "Escape") closeLightbox();
+        if (e.key === "ArrowLeft") navLightbox(-1);
+        if (e.key === "ArrowRight") navLightbox(1);
+      });
+    }
+
+    function openLightbox(index) {
+      lightboxIndex = index;
+      showLightboxItem();
+      lbEl.classList.remove("hidden");
+    }
+
+    function closeLightbox() {
+      lbEl.classList.add("hidden");
+    }
+
+    function navLightbox(step) {
+      const max = filteredPictures.length;
+      lightboxIndex = (lightboxIndex + step + max) % max;
+      showLightboxItem();
+    }
+
+    function showLightboxItem() {
+      const pic = filteredPictures[lightboxIndex];
+      if (!pic) return;
+      lbImg.src = pic.src;
+      lbCaption.textContent = pic.title || "";
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      setupLightbox();
+      loadPictures();
+    });
+  </script>
+
+  <!-- LIGHTBOX OVERLAY -->
+<div id="lightbox" class="lightbox hidden">
+  <div class="lightbox-inner">
+    <button id="lightbox-close" class="lightbox-close">✕</button>
+    <img id="lightbox-image" alt="">
+    <div id="lightbox-caption" class="lightbox-caption"></div>
+    <div class="lightbox-nav">
+      <button id="lightbox-prev">&laquo; Prev</button>
+      <button id="lightbox-next">Next &raquo;</button>
+    </div>
+  </div>
+</div>
+
+
+</body>
+</html>

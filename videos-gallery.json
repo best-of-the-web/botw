@@ -1,0 +1,30 @@
+[
+  {
+    "thumb": "https://img.youtube.com/vi/pBwqd5ZLTW8/hqdefault.jpg",
+    "title": "Donny Benét – Back in the Studio: School's Out",
+    "url": "https://youtu.be/pBwqd5ZLTW8",
+    "category": "Music",
+    "label": "YouTube"
+  },
+  {
+    "thumb": "https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg",
+    "title": "Rick Astley – Never Gonna Give You Up",
+    "url": "https://youtu.be/dQw4w9WgXcQ",
+    "category": "Music",
+    "label": "YouTube"
+  },
+  {
+    "thumb": "https://img.youtube.com/vi/tAGnKpE4NCI/hqdefault.jpg",
+    "title": "Metallica – One (Live)",
+    "url": "https://youtu.be/tAGnKpE4NCI",
+    "category": "Live",
+    "label": "YouTube"
+  },
+  {
+    "thumb": "https://img.youtube.com/vi/4Tr0otuiQuU/hqdefault.jpg",
+    "title": "Cozy 80s Synthwave Mix",
+    "url": "https://youtu.be/4Tr0otuiQuU",
+    "category": "Background",
+    "label": "Mix"
+  }
+]

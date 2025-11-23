@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Link Picker — BOTW Tools</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      background:#000;
+      color:#5fff00;
+      font-family:Verdana,Arial,sans-serif;
+      padding:20px;
+    }
+    input, textarea, select {
+      width:100%;
+      padding:8px;
+      margin:6px 0 14px;
+      background:#111;
+      border:1px solid #444;
+      color:#fff;
+      font-size:14px;
+    }
+    button {
+      padding:10px 14px;
+      margin-top:5px;
+      background:#111133;
+      border:1px solid #444488;
+      color:#fff;
+      cursor:pointer;
+      font-weight:bold;
+    }
+    .output-box {
+      margin-top:20px;
+      padding:12px;
+      background:#000022;
+      border:1px solid #444488;
+      white-space:pre-wrap;
+      font-family:monospace;
+      font-size:13px;
+    }
+    h1 {
+      text-align:center;
+      color:#5fff00;
+    }
+  </style>
+</head>
+<body>
+
+<h1>BOTW – Link Picker</h1>
+
+<label>URL</label>
+<input type="text" id="url" placeholder="https://example.com">
+
+<label>Title</label>
+<input type="text" id="title" placeholder="Example Title">
+
+<label>Description (optional)</label>
+<textarea id="desc" rows="2" placeholder="Short description..."></textarea>
+
+<label>Category</label>
+<select id="category">
+  <option value="games">Games</option>
+  <option value="youtube">YouTube</option>
+  <option value="blog">Blog</option>
+  <option value="other">Other</option>
+</select>
+
+<label>Featured?</label>
+<select id="featured">
+  <option value="false">No</option>
+  <option value="true">Yes</option>
+</select>
+
+<button onclick="generateEntry()">Generate JSON Entry</button>
+
+<div id="output" class="output-box"></div>
+
+<script>
+function slug(str) {
+  return str.toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '');
+}
+
+function generateEntry() {
+  const url = document.getElementById("url").value.trim();
+  const title = document.getElementById("title").value.trim();
+  const desc = document.getElementById("desc").value.trim();
+  const category = document.getElementById("category").value;
+  const featured = document.getElementById("featured").value === "true";
+
+  if (!url || !title) {
+    alert("URL and Title are required");
+    return;
+  }
+
+  const id = slug(title);
+  const added = new Date().toISOString().slice(0, 10);
+
+  const entry = {
+    id,
+    title,
+    url,
+    category,
+    description: desc || "",
+    featured,
+    added
+  };
+
+  document.getElementById("output").textContent =
+    JSON.stringify(entry, null, 2);
+}
+</script>
+
+</body>
+</html>

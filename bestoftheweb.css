@@ -1,0 +1,548 @@
+/* ===============================
+   Global
+   =============================== */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Verdana, Arial, sans-serif;
+  background: url("pics/bg-star-01.gif") repeat #000000;
+  color: #875fff;
+}
+
+a {
+  color: #5fff00;
+  text-decoration: none;
+}
+a:visited {
+  color: #660099;
+}
+a:active {
+  color: #ff0000;
+}
+
+/* ===============================
+   Shell
+   =============================== */
+
+.wrap-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+/* Header / footer wrappers (header.html + footer.html are injected here) */
+.site-header {
+  margin-bottom: 16px;
+}
+
+.site-footer {
+  margin-top: 24px;
+  text-align: center;
+}
+
+.section-title {
+  margin: 8px 0;
+  text-align: left;
+}
+
+/* Basic utility */
+.center {
+  text-align: center;
+}
+
+/* Page title */
+.page-title {
+  text-align: center;
+  margin: 8px 0 16px;
+}
+
+/* ===============================
+   Layout: main + sidebar
+   =============================== */
+
+.layout {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.main-content {
+  flex: 3;
+}
+
+.sidebar {
+  flex: 1;
+  background: #111111;
+  border: 2px solid #333366;
+  padding: 12px;
+  color: #ffffff;
+  border-radius: 6px;
+}
+
+/* Responsive: stack on small screens */
+@media (max-width: 800px) {
+  .layout {
+    flex-direction: column;
+  }
+}
+
+/* ===============================
+   Thumb grid (main content)
+   =============================== */
+
+.thumb-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.thumb-card {
+  text-align: center;
+}
+
+.thumb-card img {
+  width: 100%;
+  height: auto;
+  max-height: 160px;
+  object-fit: cover;
+  border: 1px solid #444488;
+  border-radius: 4px;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.thumb-card small {
+  display: block;
+  font-size: 12px;
+}
+
+/* ===============================
+   Sidebar
+   =============================== */
+
+.sidebar h3 {
+  margin: 10px 0 8px;
+  text-align: center;
+}
+
+.sidebar img.sidebar-thumb {
+  width: 100%;
+  height: auto;
+  border: 1px solid #444488;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+
+/* Buttons */
+.btn {
+  display: block;
+  text-align: center;
+  margin: 6px 0;
+  padding: 8px 14px;
+  font-weight: bold;
+  border-radius: 4px;
+  font-family: Verdana, Arial, sans-serif;
+  cursor: pointer;
+}
+
+.btn-newsletter {
+  background: #113311;
+  border: 1px solid #447744;
+  color: #5fff00;
+}
+
+.btn-submit {
+  background: #111133;
+  border: 1px solid #444488;
+  color: #5fff00;
+}
+
+/* Sidebar simple links */
+.sidebar-links {
+  margin-top: 12px;
+  font-size: 13px;
+}
+
+.sidebar-links a {
+  display: block;
+  margin: 4px 0;
+}
+/* ===============================
+   Gallery tabs
+   =============================== */
+
+.tabs {
+  margin: 12px 0 16px;
+  text-align: center;
+}
+
+.tab {
+  display: inline-block;
+  margin: 0 4px 4px;
+  padding: 6px 12px;
+  font-size: 13px;
+  border-radius: 999px;
+  border: 1px solid #444488;
+  background: #000022;
+  color: #5fff00;
+  cursor: pointer;
+}
+
+.tab.active {
+  background: #111166;
+  border-color: #5fff00;
+}
+
+/* ===============================
+   Pagination
+   =============================== */
+
+.pagination {
+  margin: 16px 0;
+  text-align: center;
+  font-size: 13px;
+}
+
+.page-btn {
+  padding: 6px 10px;
+  margin: 0 6px;
+  border-radius: 4px;
+  border: 1px solid #444488;
+  background: #000033;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.page-btn[disabled] {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.page-info {
+  display: inline-block;
+  margin: 0 6px;
+}
+
+/* ===============================
+   Retro thumbnail styling
+   =============================== */
+
+.thumb-card {
+  text-align: center;
+  background: #000010;
+  border: 2px solid #333366;
+  border-radius: 6px;
+  padding: 6px;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
+}
+
+.thumb-card img {
+  width: 100%;
+  height: auto;
+  max-height: 160px;
+  object-fit: cover;
+  border: 2px solid #5555aa;
+  border-radius: 4px;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.thumb-card small {
+  display: block;
+  font-size: 12px;
+}
+
+/* ===============================
+   Lightbox
+   =============================== */
+
+.hidden {
+  display: none;
+}
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-inner {
+  max-width: 90vw;
+  max-height: 90vh;
+  background: #000010;
+  border: 2px solid #5fff00;
+  border-radius: 8px;
+  padding: 10px;
+  position: relative;
+  text-align: center;
+}
+
+.lightbox-inner img {
+  max-width: 100%;
+  max-height: 70vh;
+  border: 2px solid #444488;
+  border-radius: 4px;
+}
+
+.lightbox-caption {
+  margin-top: 8px;
+  font-size: 13px;
+}
+
+.lightbox-nav {
+  margin-top: 8px;
+}
+
+.lightbox-nav button {
+  padding: 6px 12px;
+  margin: 0 6px;
+  border-radius: 4px;
+  border: 1px solid #444488;
+  background: #000033;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid #444488;
+  background: #330000;
+  color: #ffffff;
+  cursor: pointer;
+}
+.lightbox.hidden {
+  display: none;
+  
+}.video-wrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 */
+  margin-bottom: 8px;
+}
+
+.video-wrapper iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Sidebar structure */
+.sidebar-box {
+  border: 1px solid #333366;
+  background: #050515;
+  border-radius: 6px;
+  padding: 8px;
+  margin-bottom: 10px;
+}
+
+.sidebar-heading {
+  margin: 0 0 6px;
+  text-align: center;
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+/* Game card */
+.sidebar-game-card {
+  display: block;
+  text-decoration: none;
+  color: #ffffff;
+  font-size: 13px;
+}
+
+.sidebar-game-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  border: 2px solid #5fff00;
+  box-shadow: 0 0 10px rgba(95, 255, 0, 0.4);
+  margin-bottom: 6px;
+}
+
+.sidebar-game-card span {
+  display: block;
+  text-align: center;
+}
+
+/* Buttons */
+.btn-newsletter-secondary {
+  background: #112211;
+  border: 1px solid #335533;
+  color: #5fff00;
+  display: block;
+  text-align: center;
+  margin-top: 6px;
+}
+
+/* Tidy the links list */
+.sidebar-links {
+  margin-top: 8px;
+  font-size: 13px;
+}
+
+.sidebar-links a {
+  display: block;
+  margin: 3px 0;
+}
+
+nav a:visited,
+.sidebar-links a:visited,
+.thumb-card a:visited,
+a:visited {
+  color: #cc66ff !important; /* bright neon purple */
+}
+
+/* ===============================
+   Games layout
+   =============================== */
+
+.game-group {
+  margin-bottom: 18px;
+}
+
+.game-group-title {
+  margin: 8px 0;
+  font-size: 16px;
+  border-bottom: 1px solid #333366;
+}
+
+.game-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.game-card {
+  display: flex;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #333366;
+  background: #050515;
+}
+
+.game-icon img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  border-radius: 4px;
+  border: 1px solid #444488;
+  background: #000010;
+}
+
+.game-body {
+  flex: 1;
+}
+
+.game-name {
+  margin: 0 0 4px;
+  font-size: 14px;
+}
+
+.game-name a {
+  color: #5fff00;
+  text-decoration: none;
+}
+
+.game-name a:hover {
+  text-decoration: underline;
+}
+
+.game-desc {
+  margin: 0 0 6px;
+  font-size: 13px;
+}
+
+.game-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  font-size: 11px;
+}
+
+.game-tag {
+  padding: 2px 6px;
+  border-radius: 999px;
+  border: 1px solid #444488;
+  background: #000022;
+}
+
+.game-tag-accent {
+  border-color: #5fff00;
+  color: #5fff00;
+}
+
+.game-link {
+  margin-left: auto;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #444488;
+  background: #000033;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.game-link:hover {
+  text-decoration: underline;
+}
+
+/* Stack icon above text on small screens */
+@media (max-width: 600px) {
+  .game-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+/* Newsletter */
+
+.newsletter-hero-card {
+  padding: 12px;
+  border: 1px solid #333366;
+  border-radius: 6px;
+  background: #050515;
+  margin-bottom: 12px;
+}
+
+.newsletter-section {
+  margin-top: 18px;
+  border-bottom: 1px solid #333366;
+}
+
+.newsletter-item {
+  border: 1px solid #333366;
+  border-radius: 6px;
+  padding: 8px;
+  background: #050515;
+  margin: 6px 0;
+}
+
+.newsletter-archive-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.newsletter-archive-card {
+  display: block;
+  border: 1px solid #333366;
+  padding: 10px;
+  background: #050515;
+  border-radius: 6px;
+  text-decoration: none;
+  color: #fff;
+}

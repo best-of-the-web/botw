@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pictures – Greg's Best of the Web 1.0</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="bestoftheweb.css">
+</head>
+<body>
+
+  <div class="wrap-page">
+
+    <!-- Header include -->
+    <div id="site-header" class="site-header"></div>
+
+    <main>
+      <h2 class="page-title">Picture Gallery</h2>
+
+      <div class="layout">
+
+        <!-- MAIN CONTENT -->
+        <section class="main-content">
+
+          <p class="center">
+            A collection of pictures from <code>/pics/how-old-is-he</code>.
+          </p>
+
+          <div class="thumb-grid" id="picture-gallery">
+            <!-- Images will be injected here by JS -->
+          </div>
+
+        </section>
+
+        <!-- SIDEBAR include -->
+        <aside id="site-sidebar" class="sidebar"></aside>
+
+      </div>
+    </main>
+
+    <!-- Footer include -->
+    <div id="site-footer" class="site-footer"></div>
+
+  </div>
+
+  <script src="includes.js"></script>
+
+  <script>
+    // List of images in /pics/how-old-is-he
+    // You can add/remove filenames here at any time.
+    const galleryImages = [
+      "al-pacino-1974-photo.jpg",
+      "robert-de-niro-1976-photo.jpg",
+      "jack-nicholson-1980-photo.jpg",
+      "harrison-ford-1981-photo.jpg",
+      "mel-gibson-1987-photo.jpg",
+      "bruce-willis-1988-photo.jpg",
+      "arnold-schwarzenegger-1991-photo.jpg",
+      "sylvester-stallone-1985-photo.jpg",
+      "tom-selleck-1982-photo.jpg",
+      "clint-eastwood-1971-photo.jpg"
+      // add more as needed
+    ];
+
+    const galleryPath = "pics/how-old-is-he/";
+
+    function buildGallery() {
+      const container = document.getElementById("picture-gallery");
+
+      galleryImages.forEach(file => {
+        const div = document.createElement("div");
+        div.className = "thumb-card";
+
+        div.innerHTML = `
+          <img src="${galleryPath + file}" alt="${file}">
+          <small>${file.replace(/-/g, ' ').replace('.jpg', '')}</small>
+        `;
+
+        container.appendChild(div);
+      });
+    }
+
+    buildGallery();
+  </script>
+
+</body>
+</html>

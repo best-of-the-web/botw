@@ -1,0 +1,52 @@
+[
+  {
+    "name": "OpenTTD",
+    "url": "https://www.openttd.org/",
+    "description": "Open source Transport Tycoon Deluxe. Trains, trucks, planes and a ridiculous amount of micromanagement.",
+    "category": "PC",
+    "platform": "Windows / macOS / Linux",
+    "icon": "pics/games/openttd.png",
+    "label": "Free",
+    "added": "2025-11-20"
+  },
+  {
+    "name": "Dwarf Fortress (Classic / Steam)",
+    "url": "https://www.bay12games.com/dwarves/",
+    "description": "ASCII hell or Steam tile heaven. Build a fortress, lose your mind.",
+    "category": "PC",
+    "platform": "Windows",
+    "icon": "pics/games/dwarf-fortress.png",
+    "label": "Time sink",
+    "added": "2025-11-20"
+  },
+  {
+    "name": "Project Zomboid",
+    "url": "https://projectzomboid.com/",
+    "description": "Isometric zombie survival with deep systems. 'This is how you died.'",
+    "category": "PC",
+    "platform": "Windows / macOS / Linux",
+    "icon": "pics/games/project-zomboid.png",
+    "label": "Early access",
+    "added": "2025-11-19"
+  },
+  {
+    "name": "Vampire Survivors",
+    "url": "https://poncle.itch.io/vampire-survivors",
+    "description": "One-stick bullet-hell slot machine. Dirt cheap, dangerously moreish.",
+    "category": "PC",
+    "platform": "PC / Xbox / Switch / Mobile",
+    "icon": "pics/games/vampire-survivors.png",
+    "label": "Cheapo crack",
+    "added": "2025-11-18"
+  },
+  {
+    "name": "GeoGuessr Alternatives – City Guesser",
+    "url": "https://virtualvacation.us/guess",
+    "description": "Street-view guessing without the paywall. Good for killing 10 minutes.",
+    "category": "Browser",
+    "platform": "Browser",
+    "icon": "pics/games/city-guesser.png",
+    "label": "Web",
+    "added": "2025-11-18"
+  }
+]

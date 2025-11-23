@@ -1,0 +1,130 @@
+/* ===============================
+   Global Page Styling
+   =============================== */
+
+body {
+  margin: 0;
+  font-family: Verdana, Arial, sans-serif;
+  background: url("pics/bg-star-01.gif") repeat #000000;
+  color: #875fff;
+}
+
+a {
+  color: #5fff00;
+  text-decoration: none;
+}
+a:visited { color: #660099; }
+a:active  { color: #ff0000; }
+
+/* ===============================
+   Layout Containers
+   =============================== */
+
+.wrap-page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Flexbox Layout: Main + Sidebar */
+.layout {
+  display: flex;
+  gap: 20px;
+}
+
+.main-content {
+  flex: 3;
+}
+
+.sidebar {
+  flex: 1;
+  background: #111111;
+  border: 2px solid #333366;
+  padding: 12px;
+  color: #ffffff;
+  border-radius: 6px;
+}
+
+/* ===============================
+   Header + Footer
+   =============================== */
+
+.site-header,
+.site-footer {
+  text-align: center;
+}
+
+.site-header hr,
+.site-footer hr {
+  width: 50%;
+  border: none;
+  border-top: 1px solid #444488;
+  margin: 10px auto;
+}
+
+/* ===============================
+   Sidebar Elements
+   =============================== */
+
+.sidebar h3 {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.sidebar img.thumb {
+  width: 100%;
+  height: auto;
+  border: 1px solid #444488;
+  margin-bottom: 10px;
+}
+
+.sidebar-button {
+  display: block;
+  text-align: center;
+  margin: 8px 0;
+  padding: 8px 14px;
+  font-weight: bold;
+  border-radius: 4px;
+  font-family: Verdana;
+}
+.btn-newsletter {
+  background: #113311;
+  border: 1px solid #447744;
+  color: #5fff00;
+}
+.btn-submit {
+  background: #111133;
+  border: 1px solid #444488;
+  color: #5fff00;
+}
+
+/* ===============================
+   Grid for Thumbnails
+   =============================== */
+
+.thumb-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 20px;
+}
+
+.thumb-card {
+  text-align: center;
+}
+
+.thumb-card img {
+  width: 100%;
+  border: 1px solid #444488;
+}
+
+.thumb-card small {
+  display: block;
+  margin-top: 4px;
+}
+
+/* ===============================
+   Utility
+   =============================== */
+
+.center { text-align:center; }
+.mt-20  { margin-top:20px; }

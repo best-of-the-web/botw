@@ -1,48 +1,177 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Best of the Web</title>
+  <meta charset="UTF-8">
+  <title>Greg's Best of the Web 1.0</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="bestoftheweb.css">
 </head>
-<body background="pics/bg-star-01.gif" bgcolor="#00000" text="#875fff" link="#5fff00" vlink="#660099" alink="#ff0000">
+<body>
 
-  <center>
-    <h1>Greg's Best of the Web 1.0</h1>
-    <h2>Categories</h2>
-    <a href="https://best-of-the-web.netlify.app/youtube-links">YouTube</a>&nbsp;| 
-    <a href="https://best-of-the-web.netlify.app/other-links">Other</a>
-   
-    
-    <hr width="50%">
-    
+  <div class="wrap-page">
 
-  <ul>
-    <li><a href="https://youtu.be/pBwqd5ZLTW8?si=oQNKGNeT19NrSRHr">Donny Benét : Back in the Studio - School's Out (YouTube)</a></li>
-    <li><a href="https://earthquake.usgs.gov/earthquakes/map/?extent=-43.19717,-191.07422&extent=72.28907,90.17578">USGS: Latest Earthquakes (Other)</a></a></li>
+    <!-- Header include (header.html) -->
+    <div id="site-header" class="site-header"></div>
 
-  </ul>
- <img src="pics/under-construction-01.gif">
-  <hr>
-  <font size="-1">Updated: <script>document.write(new Date().toDateString())</script></font>
-<hr>
- <a href='http://www.freevisitorcounters.com'>Freevisitorcounters</a> <script type='text/javascript' src='https://www.freevisitorcounters.com/auth.php?id=e58ddd249115a73102986f45d8d1d5ed30adf79b'></script>
-<script type="text/javascript" src="https://www.freevisitorcounters.com/en/home/counter/1443941/t/9"></script>
-  </center>
+  <main>
+    <h2 class="page-title">Home</h2>
 
+    <div class="layout">
+      <!-- MAIN CONTENT AREA -->
+      <section class="main-content">
+
+        <h3 class="section-title">Latest from the Video Gallery</h3>
+        <div class="thumb-grid" id="home-videos"></div>
+
+        <h3 class="section-title">Latest from the Picture Gallery</h3>
+        <div class="thumb-grid" id="home-pictures"></div>
+
+       <!-- <h3 class="section-title">Latest Tools</h3>
+        <div class="thumb-grid" id="home-tools"></div>
+		
+        <h3 class="section-title">Latest Games</h3>
+        <div class="thumb-grid" id="home-games"></div> -->
+
+<h3 class="section-title">Latest Newsletter</h3>
+<div class="thumb-grid" id="home-newsletter"></div>
+
+      </section>
+
+      <!-- SIDEBAR -->
+      <aside id="site-sidebar" class="sidebar"></aside>
+
+    </div>
+  </main>
+
+    <!-- Footer include (footer.html) -->
+    <div id="site-footer" class="site-footer"></div>
+
+  </div>
+
+  <!-- Header/footer include loader -->
+  <script src="includes.js"></script>
+  
+    <!-- Header/footer/sidebar include loader -->
+  <script src="includes.js"></script>
+
+  <script>
+    // Helper to fetch JSON safely
+    async function fetchJson(path) {
+      const res = await fetch(path + "?v=" + Date.now());
+      if (!res.ok) throw new Error(res.status + " " + res.statusText);
+      return res.json();
+    }
+
+    // If items have an "added" field (YYYY-MM-DD), sort newest first.
+    // Otherwise we assume the JSON is already in newest-first order.
+    function sortByAdded(items) {
+      if (!items.length || !items[0].added) return items;
+      return items.slice().sort((a, b) => {
+        return String(b.added).localeCompare(String(a.added));
+      });
+    }
+
+function renderCards(containerId, items, type) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  if (!items || !items.length) {
+    container.innerHTML = "<p class='center'><small>No items yet.</small></p>";
+    return;
+  }
+
+  items.forEach(item => {
+    const div = document.createElement("div");
+    div.className = "thumb-card";
+
+    let imgSrc = "";
+    let linkHref = "#";
+
+    if (type === "video") {
+      imgSrc = item.thumb || "";
+      linkHref = "videos.html";
+    } else if (type === "picture") {
+      imgSrc = item.src || "";
+      linkHref = "pictures.html";
+    } else if (type === "tool") {
+      imgSrc = item.icon || "pics/tools/tool-default.png";
+      linkHref = "tools.html";
+    } else if (type === "game") {
+      imgSrc = item.icon || "pics/games/game-default.png";
+      linkHref = "games.html";
+    }
+
+    const title = item.title || item.name || "";
+    const label = item.label ? " (" + item.label + ")" : "";
+
+    div.innerHTML = `
+      <a href="${linkHref}">
+        <img src="${imgSrc}" alt="${title}">
+      </a>
+      <small>${title}${label}</small>
+    `;
+
+    container.appendChild(div);
+  });
+}
+
+async function buildHome() {
+  try {
+    // Videos
+    const videos = await fetchJson("videos-gallery.json").catch(() => []);
+    const vidsSorted = sortByAdded(videos);
+    renderCards("home-videos", vidsSorted.slice(0, 3), "video");
+  } catch (e) {
+    console.error("Videos on home failed:", e);
+  }
+
+  try {
+    // Pictures
+    const pics = await fetchJson("pictures-gallery.json").catch(() => []);
+    const picsSorted = sortByAdded(pics);
+    renderCards("home-pictures", picsSorted.slice(0, 3), "picture");
+  } catch (e) {
+    console.error("Pictures on home failed:", e);
+  }
+
+  try {
+    // Tools
+    const tools = await fetchJson("tools-gallery.json").catch(() => []);
+    const toolsSorted = sortByAdded(tools);
+    renderCards("home-tools", toolsSorted.slice(0, 3), "tool");
+  } catch (e) {
+    console.error("Tools on home failed:", e);
+  }
+  
+    try {
+    // Games
+    const games = await fetchJson("games-gallery.json").catch(() => []);
+    const gamesSorted = sortByAdded(games);
+    renderCards("home-games", gamesSorted.slice(0, 3), "game");
+  } catch (e) {
+    console.error("Games on home failed:", e);
+  }
+try {
+//Newsletter
+  const news = await fetchJson("newsletter-index.json").catch(() => null);
+  if (news) {
+    const latest = news.issues.find(i => i.id === news.latest);
+    if (latest) {
+      renderCards("home-newsletter", [{
+        icon: "pics/newsletters/banner-default.jpg",
+        name: latest.title
+      }], "newsletter");
+    }
+  }
+} catch(e) {}
+
+}
+    document.addEventListener("DOMContentLoaded", buildHome);
+  </script>
 </body>
 </html>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+</body>
+</html>
