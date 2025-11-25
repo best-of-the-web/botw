@@ -1,8 +1,0 @@
-{
-  "name": "best-of-the-web",
-  "version": "1.0.0",
-  "private": true,
-  "scripts": {
-    "build": "node generate-newsletter-rss.js"
-  }
-}

@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How Old Is He?</title>
+  <style>
+    :root {
+      --bg:#0f1115;
+      --card:#161a22;
+      --card-soft:#1d222f;
+      --text:#e8ecf1;
+      --muted:#9aa4b2;
+      --accent:#5ee397;
+      --accent-soft:rgba(94,227,151,0.16);
+      --danger:#ff7676;
+      --border:#232838;
+    }
+
+    * { box-sizing:border-box; }
+
+    body {
+      margin:0;
+      min-height:100vh;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      background:radial-gradient(circle at top, #202535 0, #05060a 55%);
+      color:var(--text);
+      display:flex;
+      flex-direction:column;
+    }
+
+    header {
+      padding:14px 16px;
+      border-bottom:1px solid var(--border);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      background:#0b0d12dd;
+      backdrop-filter:blur(12px);
+      position:sticky;
+      top:0;
+      z-index:10;
+    }
+
+    header h1 {
+      margin:0;
+      font-size:18px;
+      letter-spacing:0.06em;
+      text-transform:uppercase;
+    }
+
+    header .tagline {
+      margin:0;
+      font-size:12px;
+      color:var(--muted);
+      opacity:.9;
+    }
+
+    main.page {
+      flex:1;
+      padding:16px;
+      max-width:1000px;
+      width:100%;
+      margin:0 auto 24px;
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+    }
+
+    /* SCOREBOARD */
+    .scoreboard {
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    .score-card {
+      flex:1 1 90px;
+      min-width:90px;
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:10px 12px;
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .score-card.primary {
+      border-color:var(--accent);
+      box-shadow:0 0 0 1px var(--accent-soft),0 14px 30px rgba(0,0,0,0.6);
+    }
+
+    .score-card.primary::before {
+      content:"";
+      position:absolute;
+      inset:-40%;
+      background:radial-gradient(circle at top left, var(--accent-soft), transparent 60%);
+      opacity:0.9;
+      pointer-events:none;
+    }
+
+    .score-label {
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:0.12em;
+      color:var(--muted);
+      z-index:1;
+    }
+
+    .score-value {
+      font-size:24px;
+      font-weight:650;
+      line-height:1.1;
+      z-index:1;
+    }
+
+    .score-sub {
+      font-size:11px;
+      color:var(--muted);
+      z-index:1;
+    }
+
+    /* GAME AREA */
+    .game-layout {
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+    }
+
+    .game-card {
+      background:var(--card);
+      border-radius:16px;
+      border:1px solid var(--border);
+      padding:16px;
+      display:grid;
+      grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);
+      gap:16px;
+    }
+
+    .person-panel {
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    .person-img-wrap {
+      border-radius:12px;
+      overflow:hidden;
+      border:1px solid #252a3a;
+      background:var(--card-soft);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:180px;
+    }
+
+    .person-img-wrap img {
+      max-width:100%;
+      height:auto;
+      display:block;
+      object-fit:cover;
+    }
+
+    .person-name {
+      font-size:18px;
+      font-weight:600;
+    }
+
+    .person-meta {
+      font-size:13px;
+      color:var(--muted);
+    }
+
+    .controls-panel {
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    .prompt {
+      font-size:14px;
+      color:var(--muted);
+    }
+
+    .age-input-row {
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+
+    .age-input-row input[type="number"] {
+      flex:0 0 90px;
+      padding:8px 10px;
+      border-radius:8px;
+      border:1px solid #2b3144;
+      background:#0e1017;
+      color:var(--text);
+      font-size:14px;
+    }
+
+    .age-input-row input[type="number"]:focus {
+      outline:1px solid var(--accent);
+      border-color:var(--accent);
+    }
+
+    .btn {
+      border:none;
+      border-radius:999px;
+      padding:8px 14px;
+      font-size:14px;
+      font-weight:500;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+      transition:transform .08s ease, box-shadow .08s ease, background .12s ease;
+      white-space:nowrap;
+    }
+
+    .btn-primary {
+      background:var(--accent);
+      color:#07140b;
+      box-shadow:0 10px 24px rgba(0,0,0,0.55);
+    }
+
+    .btn-primary:hover { transform:translateY(-1px); }
+    .btn-primary:active { transform:translateY(0); box-shadow:none; }
+
+    .btn-ghost {
+      background:transparent;
+      color:var(--muted);
+      border:1px dashed #343a4e;
+    }
+
+    .feedback {
+      font-size:14px;
+      min-height:20px;
+    }
+
+    .feedback.good { color:var(--accent); }
+    .feedback.bad { color:var(--danger); }
+
+    .hint-text {
+      font-size:11px;
+      color:var(--muted);
+    }
+
+    /* MOBILE */
+    @media (max-width: 720px) {
+      header {
+        flex-direction:column;
+        align-items:flex-start;
+      }
+
+      main.page {
+        padding:12px;
+      }
+
+      .game-card {
+        grid-template-columns:1fr;
+      }
+
+      .age-input-row {
+        flex-wrap:wrap;
+      }
+
+      .age-input-row input[type="number"] {
+        flex:1 1 80px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>How Old Is He?</h1>
+      <p class="tagline">Guess the age, chase the streak, beat your best score.</p>
+    </div>
+  </header>
+
+  <main class="page">
+    <!-- SCOREBOARD -->
+    <section class="scoreboard">
+      <div class="score-card primary">
+        <span class="score-label">Score</span>
+        <span class="score-value" id="score-current">0</span>
+        <span class="score-sub">+1 for a good guess</span>
+      </div>
+      <div class="score-card">
+        <span class="score-label">Best</span>
+        <span class="score-value" id="score-best">0</span>
+        <span class="score-sub">Your all-time high</span>
+      </div>
+      <div class="score-card">
+        <span class="score-label">Streak</span>
+        <span class="score-value" id="score-streak">0</span>
+        <span class="score-sub">In a row this session</span>
+      </div>
+    </section>
+
+    <!-- GAME AREA -->
+    <section class="game-layout">
+      <article class="game-card">
+        <div class="person-panel">
+          <div class="person-img-wrap">
+            <img id="person-image" src="images/placeholder.jpg" alt="Mystery man" />
+          </div>
+          <div class="person-name" id="person-name">Loading…</div>
+          <div class="person-meta" id="person-meta">Click “Next person” to start.</div>
+        </div>
+
+        <div class="controls-panel">
+          <div class="prompt">
+            How old do you think he is? You get a point if you’re within 2 years.
+          </div>
+
+          <div class="age-input-row">
+            <input id="age-input" type="number" min="10" max="99" placeholder="Age" />
+            <button id="submit-guess" class="btn btn-primary">Lock in guess</button>
+          </div>
+
+          <div class="feedback" id="feedback"></div>
+
+          <button id="next-person" class="btn btn-ghost">
+            Next person
+          </button>
+
+          <div class="hint-text">
+            No timer. Take your time, then hit “Next person” when you’re ready for the next face.
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    // --- DUMMY DATA – replace with your real list / existing logic ---
+    const people = [
+      { name:"Test Man 1", age:42, img:"images/test1.jpg", note:"British actor" },
+      { name:"Test Man 2", age:31, img:"images/test2.jpg", note:"90s footballer" },
+      { name:"Test Man 3", age:57, img:"images/test3.jpg", note:"TV presenter" }
+    ];
+
+    let currentIndex = -1;
+    let hasGuessed = false;
+    let score = 0;
+    let bestScore = parseInt(localStorage.getItem("hoih-best-score") || "0", 10);
+    let streak = 0;
+
+    const scoreCurrentEl = document.getElementById("score-current");
+    const scoreBestEl = document.getElementById("score-best");
+    const scoreStreakEl = document.getElementById("score-streak");
+    const personImageEl = document.getElementById("person-image");
+    const personNameEl = document.getElementById("person-name");
+    const personMetaEl = document.getElementById("person-meta");
+    const ageInputEl = document.getElementById("age-input");
+    const feedbackEl = document.getElementById("feedback");
+    const submitGuessBtn = document.getElementById("submit-guess");
+    const nextPersonBtn = document.getElementById("next-person");
+
+    function updateScoreUI() {
+      scoreCurrentEl.textContent = score;
+      scoreBestEl.textContent = bestScore;
+      scoreStreakEl.textContent = streak;
+    }
+
+    function pickNextPerson() {
+      const next = (currentIndex + 1) % people.length;
+      currentIndex = next;
+
+      const p = people[currentIndex];
+      personImageEl.src = p.img;
+      personImageEl.alt = p.name;
+      personNameEl.textContent = p.name;
+      personMetaEl.textContent = p.note || "";
+      feedbackEl.textContent = "";
+      feedbackEl.className = "feedback";
+      ageInputEl.value = "";
+      hasGuessed = false;
+    }
+
+    function handleGuess() {
+      if (hasGuessed) return; // prevent double scoring
+
+      const raw = ageInputEl.value.trim();
+      const guess = Number(raw);
+      if (!raw || Number.isNaN(guess)) {
+        feedbackEl.textContent = "Type an age first.";
+        feedbackEl.className = "feedback bad";
+        return;
+      }
+
+      const actual = people[currentIndex].age;
+      const diff = Math.abs(guess - actual);
+      const close = diff <= 2;
+
+      if (close) {
+        score += 1;
+        streak += 1;
+        feedbackEl.textContent = `Nice. He’s ${actual}. You were ${diff === 0 ? "spot on" : diff + " years off"}.`;
+        feedbackEl.className = "feedback good";
+      } else {
+        streak = 0;
+        feedbackEl.textContent = `Nope. He’s ${actual}. You were ${diff} years off.`;
+        feedbackEl.className = "feedback bad";
+      }
+
+      if (score > bestScore) {
+        bestScore = score;
+        localStorage.setItem("hoih-best-score", String(bestScore));
+      }
+
+      updateScoreUI();
+      hasGuessed = true;
+    }
+
+    submitGuessBtn.addEventListener("click", handleGuess);
+    ageInputEl.addEventListener("keydown", e => {
+      if (e.key === "Enter") handleGuess();
+    });
+
+    nextPersonBtn.addEventListener("click", () => {
+      pickNextPerson();
+    });
+
+    // init
+    updateScoreUI();
+    pickNextPerson();
+  </script>
+</body>
+</html>

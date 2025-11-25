@@ -1,381 +1,387 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Greg's Best of the Web 1.0 — How Old Is He?</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Greg's Best of the Web 1.0 — How Old Is He?</title>
 
-<!--<link rel="stylesheet" href="bestoftheweb.css">-->
+<style>
+  body {
+    margin: 0;
+    font-family: Verdana, Arial, sans-serif;
+    background: #000 url("pics/bg-star-01.gif") repeat;
+    color: #875fff;
+  }
 
-  <style>
-    body {
-      margin:0;
-      font-family: Verdana, Arial, sans-serif;
-      background:url("pics/bg-star-01.gif") repeat #000000;
-      color:#875fff;
-    }
-    a { color:#5fff00; }
-    a:visited { color:#660099; }
-    a:active { color:#ff0000; }
+  a { color: #ffcc00; }
 
-    .wrap-page {
-      max-width:960px;
-      margin:0 auto;
-      padding:10px 8px 30px;
-    }
+  .page {
+    max-width: 960px;
+    margin: 0 auto;
+    background: rgba(0,0,32,0.92);
+    border-left: 2px solid #4444aa;
+    border-right: 2px solid #4444aa;
+    min-height: 100vh;
+    box-shadow: 0 0 15px #000;
+  }
 
-    .center { text-align:center; }
+  #site-header,
+  #site-footer,
+  #site-sidebar {
+    /* filled by includes.js */
+  }
 
-    .card {
-      margin-top:16px;
-      background:rgba(0,0,0,0.8);
-      border:2px solid #333366;
-      border-radius:10px;
-      padding:10px;
-      display:flex;
-      gap:12px;
-    }
+  .page-inner {
+    display: flex;
+    padding: 12px 16px 40px 16px;
+    gap: 12px;
+  }
 
-    .photo-box {
-      flex:0 0 220px;
-      max-width:220px;
-    }
-    .photo-box img {
-      width:100%;
-      height:300px;
-      object-fit:cover;
-      border:1px solid #444488;
-    }
+  .main-col {
+    flex: 1;
+    min-width: 0;
+  }
 
-    .meta {
-      flex:1;
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-    }
+  .title-box {
+    background: #000022;
+    border: 1px solid #444488;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+  }
+  .title-box h1 {
+    margin: 0 0 4px 0;
+    font-size: 20px;
+    color: #ffcc00;
+  }
+  .title-box p {
+    margin: 0;
+    font-size: 12px;
+    color: #c0b0ff;
+  }
 
-    .name {
-      font-size:24px;
-      font-weight:bold;
-    }
-    .context {
-      font-size:13px;
-      color:#c0b0ff;
-    }
-    .age {
-      font-size:18px;
-      margin-top:2px;
-    }
-    .muted {
-      color:#c0b0ff;
-    }
+  .game-wrap {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
 
-    .pill-row {
-      margin-top:6px;
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      font-size:11px;
-    }
-    .pill {
-      padding:4px 8px;
-      border-radius:999px;
-      border:1px solid #444488;
-      background:#000022;
-    }
+  .card-box {
+    flex: 0 0 260px;
+    background: #000011;
+    border: 2px solid #444488;
+    border-radius: 6px;
+    padding: 8px;
+    text-align: center;
+  }
+  .card-box img {
+    width: 100%;
+    max-width: 240px;
+    height: auto;
+    border-radius: 4px;
+    border: 2px solid #875fff;
+    display: block;
+    margin: 0 auto 8px auto;
+    background: #000;
+  }
+  .card-name {
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 4px;
+  }
+  .card-context {
+    font-size: 12px;
+    color: #c0b0ff;
+  }
 
-    .guess-block {
-      margin-top:10px;
-      padding:8px;
-      border:1px dashed #444488;
-      background:#000010;
-    }
-    .guess-label {
-      font-size:12px;
-      margin-bottom:6px;
-      color:#c0b0ff;
-    }
-    .guess-controls {
-      display:flex;
-      gap:8px;
-      align-items:stretch;
-    }
-    .guess-input {
-      flex:1;
-      padding:8px;
-      font-size:18px;
-      border:1px solid #444488;
-      border-radius:4px;
-      background:#000000;
-      color:#ffffff;
-      outline:none;
-    }
-    .guess-input:focus {
-      border-color:#5fff00;
-    }
-    button {
-      cursor:pointer;
-      border:1px solid #444488;
-      background:#000033;
-      color:#ffffff;
-      padding:8px 14px;
-      font-size:14px;
-      border-radius:4px;
-    }
-    button.primary {
-      font-weight:bold;
-      background:#111166;
-    }
+  .right-panel {
+    flex: 1;
+    min-width: 0;
+  }
 
-    .result {
-      margin-top:8px;
-      padding:6px 8px;
-      border-radius:4px;
-      border:1px solid #444488;
-      background:#000022;
-      font-size:13px;
-    }
-    .hidden { display:none; }
+  .stats-box {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 10px;
+    font-size: 13px;
+  }
 
-    .next-row {
-      margin-top:8px;
-      display:flex;
-      gap:8px;
-      align-items:center;
-      font-size:12px;
-      color:#c0b0ff;
-      flex-wrap:wrap;
-    }
+  .stat-pill {
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: #000022;
+    border: 1px solid #444488;
+  }
+  .stat-pill strong { font-size: 16px; }
 
-    .small-note {
-      font-size:11px;
-      color:#c0b0ff;
-    }
+  /* Guess box */
+  .guess-box {
+    background: #000010;
+    border: 1px dashed #444488;
+    border-radius: 4px;
+    padding: 12px;
+  }
 
-    .error {
-      margin-top:12px;
-      padding:8px;
-      border-radius:4px;
-      border:1px solid #884444;
-      background:#220000;
-      color:#ffaaaa;
-      font-size:13px;
-    }
+  .guess-label {
+    font-size: 13px;
+    color: #c0b0ff;
+    margin-bottom: 8px;
+  }
 
-    hr { border:0; border-top:1px solid #444488; margin:10px 0; }
+  .guess-row {
+    display: flex;
+    gap: 8px;
+  }
 
-    @media (max-width:700px) {
-      .card {
-        flex-direction:column;
-      }
-      .photo-box {
-        flex:0 0 auto;
-        max-width:none;
-      }
-      .photo-box img {
-        height:auto;
-      }
-      .guess-controls {
-        flex-direction:column;
-      }
-      button {
-        width:100%;
-      }
-      .next-row {
-        flex-direction:column;
-        align-items:flex-start;
-      }
+  .guess-input {
+    width: 80px;
+    font-size: 20px;
+    padding: 8px;
+    border: 1px solid #444488;
+    border-radius: 4px;
+    background: #000;
+    color: #fff;
+  }
+
+  /* Hide number input spinners */
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+
+  .guess-quick {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-right: 8px;
+    align-items: center;
+  }
+
+  .guess-chip {
+    padding: 4px 8px;
+    font-size: 11px;
+    border-radius: 999px;
+    background: #000022;
+    border: 1px solid #444488;
+    color: #fff;
+    cursor: pointer;
+  }
+  .guess-chip:hover {
+    border-color: #5fff00;
+  }
+
+  .guess-input:focus {
+    border-color: #5fff00;
+    outline: none;
+  }
+
+  /* Controls */
+  .controls {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #c0b0ff;
+  }
+  .controls button {
+    cursor: pointer;
+    border: 1px solid #444488;
+    background: #000033;
+    color: #fff;
+    padding: 8px 14px;
+    font-size: 14px;
+    border-radius: 4px;
+  }
+  button.primary {
+    background: #111166;
+    font-weight: bold;
+  }
+
+  /* Feedback */
+  .feedback {
+    margin-top: 6px;
+    padding: 8px;
+    background: #000022;
+    border: 1px solid #444488;
+    border-radius: 4px;
+    font-size: 15px; /* slightly larger */
+  }
+  .hidden { display:none; }
+
+  /* Next button */
+  .next-row {
+    margin-top: 10px;
+  }
+
+  /* Side column placeholder */
+  .side-col {
+    flex: 0 0 160px;
+    min-width: 160px;
+  }
+
+  @media (max-width: 800px) {
+    .page-inner {
+      flex-direction: column;
     }
-  </style>
+    .game-wrap {
+      flex-direction: column;
+    }
+    .card-box {
+      max-width: 100%;
+    }
+    .side-col {
+      order: -1;
+      width: 100%;
+    }
+  }
+</style>
 </head>
-<body background="pics/bg-star-01.gif" bgcolor="#000000" text="#875fff" link="#5fff00" vlink="#660099" alink="#ff0000">
+<body>
 
-  <div class="wrap-page">
-    <div class="center">
-    <div id="site-header"></div>
-    <h2>How old is he?<h2></div>
-	
-    <div id="errorBox" class="error hidden"></div>
+<div class="page">
+  <div id="site-header"></div>
 
-    <div class="card">
-      <div class="photo-box">
-        <img id="photo" alt="Celebrity photo">
+  <div class="page-inner">
+    <div class="main-col">
+
+      <div class="title-box">
+        <h1>How Old Is He?</h1>
+        <p>Look at the photo, type an age, and see how close you are. 3 points for an exact hit, 2 for ±2 years, 1 for ±5.</p>
       </div>
 
-      <div class="meta">
-        <div>
-          <div class="name" id="name">Loading…</div>
-          <div class="context" id="context"></div>
-          <div class="age muted" id="age">(age hidden)</div>
+      <div class="game-wrap">
+
+        <!-- LEFT: CARD -->
+        <div class="card-box">
+          <img id="photo" alt="Celebrity photo">
+          <div class="card-name" id="name">Loading…</div>
+          <div class="card-context" id="context"></div>
         </div>
 
-        <div class="pill-row">
-          <div class="pill">Score: <strong id="score">0</strong></div>
-          <div class="pill">Streak: <strong id="streak">0</strong></div>
-          <div class="pill">Card <strong id="pos">0</strong>/<strong id="total">0</strong></div>
-        </div>
+        <!-- RIGHT: PANEL -->
+        <div class="right-panel">
 
-        <div class="guess-block">
-          <div class="guess-label">Guess his age in this photo:</div>
-          <div class="guess-controls">
-            <input
-              type="number"
-              id="guessInput"
-              class="guess-input"
-              placeholder="Type a number and press Enter"
-              min="0"
-              max="120"
-              autocomplete="off"
-            >
-            <button id="submitGuess" class="primary">Guess age</button>
+          <!-- Stats -->
+          <div class="stats-box">
+            <div class="stat-pill">Score: <strong id="score">0</strong></div>
+            <div class="stat-pill">Streak: <strong id="streak">0</strong></div>
+            <div class="stat-pill">Card <strong id="pos">0</strong>/<strong id="total">0</strong></div>
           </div>
-        </div>
 
-        <div class="pill-row">
-          <button id="reveal">Reveal age</button>
-        </div>
+          <!-- Guess box -->
+          <div class="guess-box">
+            <div class="guess-label">Guess his age in this photo:</div>
+            <div class="guess-row">
+              <div class="guess-quick">
+                <button type="button" class="guess-chip" data-age="25">25</button>
+                <button type="button" class="guess-chip" data-age="30">30</button>
+                <button type="button" class="guess-chip" data-age="35">35</button>
+                <button type="button" class="guess-chip" data-age="40">40</button>
+                <button type="button" class="guess-chip" data-age="45">45</button>
+              </div>
+              <input
+                type="number"
+                id="guessInput"
+                class="guess-input"
+                min="10"
+                max="80"
+                inputmode="numeric"
+                placeholder="Type an age"
+              >
+              <button id="submitGuess" class="primary">Guess</button>
+            </div>
+          </div>
 
-        <div id="feedback" class="result hidden"></div>
+          <div id="feedback" class="feedback hidden"></div>
 
-        <div id="nextRow" class="next-row hidden">
-          <button id="nextNow" class="primary">Next person »</button>
-          <button id="resetScore">Reset score</button>
-          <span class="small-note" id="autoNote"></span>
+          <div id="nextRow" class="next-row hidden">
+            <button id="nextBtn" class="primary">Next »</button>
+          </div>
+
         </div>
       </div>
+
+      <div id="site-footer"></div>
     </div>
+
+    <!-- Sidebar gets dropped in here if you use it -->
+    <div class="side-col" id="site-sidebar"></div>
   </div>
+</div>
+
+<script src="includes.js"></script>
 
 <script>
 let DATA = [];
 let i = 0;
 let score = 0;
 let streak = 0;
-let countdownTimer = null;
-let countdownRemaining = 0;
 
 const qs = new URLSearchParams(location.search);
-const setName = qs.get("set") || "default";  // use ?set=week1 etc.
-const dataUrl = `how-old-is-he-${setName}.json`;
+const setName = qs.get("set") || "default";
+const dataUrl = \`how-old-is-he-\${setName}.json\`;
 
 const els = {
   photo: document.getElementById("photo"),
   name: document.getElementById("name"),
   context: document.getElementById("context"),
-  age: document.getElementById("age"),
   score: document.getElementById("score"),
   streak: document.getElementById("streak"),
   pos: document.getElementById("pos"),
   total: document.getElementById("total"),
-  reveal: document.getElementById("reveal"),
-  feedback: document.getElementById("feedback"),
   guessInput: document.getElementById("guessInput"),
   submitGuess: document.getElementById("submitGuess"),
+  feedback: document.getElementById("feedback"),
   nextRow: document.getElementById("nextRow"),
-  nextNow: document.getElementById("nextNow"),
-  resetScore: document.getElementById("resetScore"),
-  autoNote: document.getElementById("autoNote"),
-  errorBox: document.getElementById("errorBox"),
+  nextBtn: document.getElementById("nextBtn"),
 };
 
-function scoreKey(name) {
-  return `hoi_score_${name}`;
-}
-function streakKey(name) {
-  return `hoi_streak_${name}`;
-}
-
-async function loadData() {
+async function loadData(){
   try {
-    const res = await fetch(dataUrl + "?v=" + Date.now());
+    const res = await fetch(dataUrl);
     if (!res.ok) throw new Error(res.status + " " + res.statusText);
-    const json = await res.json();
-    if (!Array.isArray(json) || json.length === 0) throw new Error("No data");
-    DATA = json;
-    // clamp index
-    i = parseInt(qs.get("i") || "0", 10);
-    if (isNaN(i) || i < 0) i = 0;
-    if (i >= DATA.length) i = DATA.length - 1;
-
-    score = parseInt(localStorage.getItem(scoreKey(setName)) || "0", 10);
-    streak = parseInt(localStorage.getItem(streakKey(setName)) || "0", 10);
-
-    render();
+    DATA = await res.json();
   } catch (err) {
-    els.errorBox.textContent =
-      "Could not load data file: " + dataUrl + ". Check the filename and JSON format.";
-    els.errorBox.classList.remove("hidden");
-    console.error(err);
+    console.error("Failed to load data", err);
+    DATA = [];
   }
+  if (!DATA.length) {
+    els.name.textContent = "No data";
+    return;
+  }
+  els.total.textContent = DATA.length;
+  i = 0;
+  score = 0;
+  streak = 0;
+  els.score.textContent = score;
+  els.streak.textContent = streak;
+  showCard();
 }
 
-function render() {
+function showCard(){
   const cur = DATA[i];
-  els.total.textContent = DATA.length.toString();
-  els.pos.textContent = (i + 1).toString();
-  els.name.textContent = cur.name;
-  els.context.textContent = cur.knownFor || "";
-  els.age.textContent = "(age hidden)";
-  els.age.classList.add("muted");
-  els.feedback.classList.add("hidden");
-  els.feedback.textContent = "";
-  stopNextCountdown();
-  els.nextRow.classList.add("hidden");
-  els.autoNote.textContent = "";
+  els.photo.src = cur.img;
   els.photo.alt = cur.name;
-  if (cur.img) {
-    els.photo.src = cur.img;
-  } else {
-    els.photo.removeAttribute("src");
-  }
-  els.score.textContent = score.toString();
-  els.streak.textContent = streak.toString();
+  els.name.textContent = cur.name;
+  els.context.textContent = cur.context || "";
+  els.pos.textContent = i + 1;
+  els.feedback.classList.add("hidden");
+  els.nextRow.classList.add("hidden");
   els.guessInput.value = "";
   els.guessInput.focus();
 }
 
-function setIndex(newIndex) {
-  const url = new URL(location.href);
-  url.searchParams.set("i", String(newIndex));
-  url.searchParams.set("set", setName);
-  location.href = url.toString();
-}
-
-function saveScore() {
-  localStorage.setItem(scoreKey(setName), String(score));
-  localStorage.setItem(streakKey(setName), String(streak));
-}
-
-function startNextCountdown() {
-  stopNextCountdown();
-  els.nextRow.classList.remove("hidden");
-  countdownRemaining = 5;
-  els.autoNote.textContent =
-    `Next card in ${countdownRemaining} seconds… or tap "Next person" now.`;
-  countdownTimer = setInterval(() => {
-    countdownRemaining--;
-    if (countdownRemaining <= 0) {
-      stopNextCountdown();
-      setIndex((i + 1) % DATA.length);
-    } else {
-      els.autoNote.textContent =
-        `Next card in ${countdownRemaining} seconds… or tap "Next person" now.`;
-    }
-  }, 1000);
-}
-
-function stopNextCountdown() {
-  if (countdownTimer !== null) {
-    clearInterval(countdownTimer);
-    countdownTimer = null;
-  }
-}
-
-function handleGuess() {
+function handleGuess(){
   const raw = els.guessInput.value.trim();
   if (!raw) return;
-  const g = parseInt(raw, 10);
+  let g = parseInt(raw, 10);
   if (isNaN(g)) return;
+
+  // clamp to sensible range
+  if (g < 10) g = 10;
+  if (g > 80) g = 80;
 
   const cur = DATA[i];
   const diff = Math.abs(g - cur.age);
@@ -386,56 +392,41 @@ function handleGuess() {
 
   score += pts;
   streak = pts > 0 ? streak + 1 : 0;
-  saveScore();
 
+  els.feedback.textContent =
+    \`You guessed \${g}. Actual age: \${cur.age}. +\${pts} point(s).\`;
   els.feedback.classList.remove("hidden");
-  els.feedback.textContent = `You guessed ${g}. Actual: ${cur.age}. +${pts} point(s).`;
-  els.score.textContent = score.toString();
-  els.streak.textContent = streak.toString();
 
-  els.age.textContent = "Age: " + cur.age;
-  els.age.classList.remove("muted");
+  els.score.textContent = score;
+  els.streak.textContent = streak;
 
-  startNextCountdown();
+  els.nextRow.classList.remove("hidden");
 }
 
-els.reveal.addEventListener("click", () => {
-  if (!DATA.length) return;
-  const cur = DATA[i];
-  els.age.textContent = "Age: " + cur.age;
-  els.age.classList.remove("muted");
-  els.feedback.classList.add("hidden");
-  els.feedback.textContent = "";
-  startNextCountdown();
+// Quick-guess chips
+document.querySelectorAll(".guess-chip").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const age = btn.getAttribute("data-age");
+    els.guessInput.value = age;
+    els.guessInput.focus();
+  });
 });
 
 els.submitGuess.addEventListener("click", handleGuess);
-els.guessInput.addEventListener("keydown", (e) => {
+els.guessInput.addEventListener("keydown", e => {
   if (e.key === "Enter") {
     e.preventDefault();
     handleGuess();
   }
 });
 
-els.nextNow.addEventListener("click", () => {
-  stopNextCountdown();
-  setIndex((i + 1) % DATA.length);
-});
-
-els.resetScore.addEventListener("click", () => {
-  score = 0;
-  streak = 0;
-  saveScore();
-  els.score.textContent = "0";
-  els.streak.textContent = "0";
+els.nextBtn.addEventListener("click", () => {
+  i = (i + 1) % DATA.length;
+  showCard();
 });
 
 loadData();
 </script>
 
-    <div id="site-footer"></div>
-  </div>
-
-  <script src="includes.js"></script>
 </body>
 </html>

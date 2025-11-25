@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Newsletter Editor</title>
+<style>
+  body {
+    font-family: system-ui;
+    background: #000;
+    color: #fff;
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+  }
+  textarea, input, button {
+    width: 100%;
+    margin-top: 6px;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #333366;
+    background: #050515;
+    color: #fff;
+  }
+  button {
+    cursor: pointer;
+    background: #111a33;
+    width: auto;
+    padding: 8px 14px;
+    margin-top: 10px;
+  }
+  button:hover {
+    background: #1d2b55;
+  }
+  .section-box {
+    border: 1px solid #333366;
+    padding: 10px;
+    margin: 16px 0;
+    background: #050515;
+    border-radius: 6px;
+  }
+  .item-box {
+    border: 1px solid #444488;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 6px;
+    background: #0a0f20;
+  }
+  h2, h3, h4 { margin-top: 20px; }
+</style>
+</head>
+
+<body>
+
+<h1>Newsletter Editor</h1>
+
+<p>Paste your existing <code>newsletter-index.json</code> below:</p>
+
+<textarea id="existingJson" placeholder="Paste entire newsletter-index.json here…" rows="12"></textarea>
+
+<hr>
+
+<h2>New Issue</h2>
+
+<label>Issue ID</label>
+<input id="issueId" type="number" placeholder="e.g. 9">
+
+<label>Date</label>
+<input id="issueDate" type="date">
+
+<label>Title</label>
+<input id="issueTitle" type="text" placeholder="e.g. Week 49 — A Surprisingly Good One">
+
+<label>Intro</label>
+<textarea id="issueIntro" placeholder="Short intro…"></textarea>
+
+<hr>
+
+<h2>Sections</h2>
+
+<div id="sections"></div>
+
+<button onclick="addSection()">+ Add Section</button>
+
+<hr>
+
+<h2>Output</h2>
+
+<button onclick="generateAll()">Generate Updated newsletter-index.json + Email Text</button>
+
+<h3>Email Version</h3>
+<textarea id="emailOutput" rows="10"></textarea>
+
+<h3>Updated newsletter-index.json</h3>
+<textarea id="jsonOutput" rows="20"></textarea>
+
+<script>
+let sectionCount = 0;
+
+// Add a new custom section
+function addSection() {
+  const container = document.getElementById("sections");
+
+  const sectionId = "section_" + sectionCount++;
+  const div = document.createElement("div");
+  div.className = "section-box";
+  div.dataset.sid = sectionId;
+
+  div.innerHTML = `
+    <label>Section Heading</label>
+    <input type="text" class="section-heading" placeholder="e.g. Videos">
+
+    <div class="items"></div>
+
+    <button type="button" onclick="addItem('${sectionId}')">+ Add Item</button>
+  `;
+
+  container.appendChild(div);
+}
+
+// Add an item inside a section
+function addItem(sectionId) {
+  const sectionBox = [...document.querySelectorAll(".section-box")]
+    .find(div => div.dataset.sid === sectionId);
+  const itemsDiv = sectionBox.querySelector(".items");
+
+  const itemDiv = document.createElement("div");
+  itemDiv.className = "item-box";
+  itemDiv.innerHTML = `
+    <label>Title</label>
+    <input type="text" class="item-title" placeholder="Item title">
+
+    <label>URL</label>
+    <input type="text" class="item-url" placeholder="https://…">
+
+    <label>Notes</label>
+    <textarea class="item-notes" placeholder="Short description…"></textarea>
+
+    <label>Thumbnail (optional)</label>
+    <input type="text" class="item-thumb" placeholder="pics/...jpg">
+  `;
+  itemsDiv.appendChild(itemDiv);
+}
+
+// Generate JSON + Email
+function generateAll() {
+  let existing;
+  try {
+    existing = JSON.parse(document.getElementById("existingJson").value);
+  } catch (e) {
+    alert("❌ Invalid existing JSON. Fix and try again.");
+    return;
+  }
+
+  const id = parseInt(document.getElementById("issueId").value, 10);
+  const date = document.getElementById("issueDate").value;
+  const title = document.getElementById("issueTitle").value;
+  const intro = document.getElementById("issueIntro").value;
+
+  // Build sections
+  const sections = [...document.querySelectorAll(".section-box")].map(sec => {
+    const heading = sec.querySelector(".section-heading").value;
+    const items = [...sec.querySelectorAll(".item-box")].map(i => ({
+      title: i.querySelector(".item-title").value,
+      url: i.querySelector(".item-url").value,
+      notes: i.querySelector(".item-notes").value,
+      thumb: i.querySelector(".item-thumb").value
+    }));
+
+    return { heading, items };
+  });
+
+  const newIssue = { id, date, title, intro, sections };
+
+  // Insert at top of issues array
+  existing.issues.unshift(newIssue);
+  existing.latest = id;
+
+  // Output full updated JSON
+  document.getElementById("jsonOutput").value = JSON.stringify(existing, null, 2);
+
+  // Build email version
+  let email = `${title} (${date})\n\n${intro}\n\n`;
+  sections.forEach(sec => {
+    email += sec.heading.toUpperCase() + "\n";
+    sec.items.forEach(i => {
+      email += `• ${i.title}\n  ${i.notes}\n  ${i.url}\n\n`;
+    });
+  });
+
+  document.getElementById("emailOutput").value = email.trim();
+}
+</script>
+
+</body>
+</html>
