@@ -7,24 +7,18 @@
     "label": "YouTube"
   },
   {
-    "thumb": "https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg",
-    "title": "Rick Astley – Never Gonna Give You Up",
-    "url": "https://youtu.be/dQw4w9WgXcQ",
+    "thumb": "https://img.youtube.com/vi/miFCWJDjL1w/hqdefault.jpg",
+    "title": "マリンバ3重奏「ぬいぐるみたちの天国と地獄」 - Orpheus in the Underworld Teddy bears Marimba trio",
+    "url": "https://youtu.be/miFCWJDjL1w",
     "category": "Music",
     "label": "YouTube"
   },
   {
-    "thumb": "https://img.youtube.com/vi/tAGnKpE4NCI/hqdefault.jpg",
-    "title": "Metallica – One (Live)",
-    "url": "https://youtu.be/tAGnKpE4NCI",
-    "category": "Live",
+    "thumb": "https://img.youtube.com/vi/a8Bvy8wHD7g/hqdefault.jpg",
+    "title": "Will the mini jeep make it to Moab? Ep1: The build.",
+    "url": "https://youtu.be/a8Bvy8wHD7g",
+    "category": "Adventure",
     "label": "YouTube"
-  },
-  {
-    "thumb": "https://img.youtube.com/vi/4Tr0otuiQuU/hqdefault.jpg",
-    "title": "Cozy 80s Synthwave Mix",
-    "url": "https://youtu.be/4Tr0otuiQuU",
-    "category": "Background",
-    "label": "Mix"
   }
+ 
 ]

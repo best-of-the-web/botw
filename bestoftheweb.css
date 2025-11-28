@@ -565,3 +565,198 @@ a:visited {
   background: #111166;
   box-shadow: 0 0 0 1px #000000, 0 0 10px rgba(95,255,0,0.7);
 }
+
+/* ===============================
+   How Old Is He? game
+   =============================== */
+
+.page-how-old .wrap-page {
+  max-width: 960px; /* match original game width */
+}
+
+/* Page title spacing */
+.page-how-old h2 {
+  margin-top: 6px;
+}
+
+/* How to play box */
+.page-how-old .rules-box {
+  margin-top: 8px;
+  background: #000010;
+  border: 1px solid #333366;
+  border-radius: 4px;
+  padding: 8px 10px;
+  font-size: 12px;
+  color: #c0b0ff;
+}
+
+.page-how-old .rules-box strong {
+  color: #5fff00;
+  font-size: 13px;
+}
+
+/* --- LAYOUT --- */
+.page-how-old .game-layout {
+  display: flex;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+@media (max-width: 720px) {
+  .page-how-old .game-layout {
+    flex-direction: column;
+  }
+}
+
+/* --- LEFT: PHOTO CARD --- */
+.page-how-old .card-box {
+  width: 320px;
+  background: #000010;
+  border: 4px double #444488;
+  border-radius: 6px;
+  padding: 10px;
+}
+
+.page-how-old .card-box img {
+  width: 100%;
+  height: auto;
+  border: 2px solid #5555aa;
+  display: block;
+}
+
+.page-how-old .card-name {
+  margin-top: 10px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.page-how-old .card-context {
+  font-size: 12px;
+  color: #c0b0ff;
+  margin-top: 2px;
+}
+
+/* --- RIGHT: STATS + GUESS --- */
+.page-how-old .right-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Score/Stats area */
+.page-how-old .stats-box {
+  background: #000010;
+  border: 2px solid #333366;
+  border-radius: 6px;
+  padding: 10px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 13px;
+}
+
+.page-how-old .stat-pill {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #000022;
+  border: 1px solid #444488;
+}
+
+.page-how-old .stat-pill strong {
+  font-size: 16px;
+}
+
+/* Guess box */
+.page-how-old .guess-box {
+  background: #000010;
+  border: 1px dashed #444488;
+  border-radius: 4px;
+  padding: 12px;
+}
+
+.page-how-old .guess-label {
+  font-size: 13px;
+  color: #c0b0ff;
+  margin-bottom: 8px;
+}
+
+.page-how-old .guess-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+/* --- QUICK GUESS CHIPS --- */
+.page-how-old .guess-chip {
+  padding: 4px 8px;
+  font-size: 11px;
+  border-radius: 999px;
+  background: #000022;
+  border: 1px solid #444488;
+  color: #fff;
+  cursor: pointer;
+}
+
+.page-how-old .guess-chip:hover {
+  border-color: #5fff00;
+}
+
+/* Number input */
+.page-how-old .guess-input {
+  width: 80px;
+  font-size: 18px; /* slightly smaller */
+  padding: 8px;
+  border: 1px solid #444488;
+  border-radius: 4px;
+  background: #000;
+  color: #fff;
+}
+
+.page-how-old .guess-input:focus {
+  border-color: #5fff00;
+  outline: none;
+}
+
+/* Hide number spinners (Chrome/Safari) */
+.page-how-old input[type="number"]::-webkit-inner-spin-button,
+.page-how-old input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Hide number spinners (Firefox) */
+.page-how-old input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Buttons – scoped so we don't affect footer/random buttons site-wide */
+.page-how-old button {
+  cursor: pointer;
+  border: 1px solid #444488;
+  background: #000033;
+  color: #fff;
+  padding: 8px 14px;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+.page-how-old button.primary {
+  background: #111166;
+  font-weight: bold;
+}
+
+/* Feedback + next row */
+.page-how-old .feedback {
+  margin-top: 6px;
+  padding: 8px;
+  background: #000022;
+  border: 1px solid #444488;
+  border-radius: 4px;
+  font-size: 15px;
+}
+
+.page-how-old .next-row {
+  margin-top: 8px;
+}

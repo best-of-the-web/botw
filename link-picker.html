@@ -1,115 +1,242 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Link Picker — BOTW Tools</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body {
-      background:#000;
-      color:#5fff00;
-      font-family:Verdana,Arial,sans-serif;
-      padding:20px;
-    }
-    input, textarea, select {
-      width:100%;
-      padding:8px;
-      margin:6px 0 14px;
-      background:#111;
-      border:1px solid #444;
-      color:#fff;
-      font-size:14px;
-    }
-    button {
-      padding:10px 14px;
-      margin-top:5px;
-      background:#111133;
-      border:1px solid #444488;
-      color:#fff;
-      cursor:pointer;
-      font-weight:bold;
-    }
-    .output-box {
-      margin-top:20px;
-      padding:12px;
-      background:#000022;
-      border:1px solid #444488;
-      white-space:pre-wrap;
-      font-family:monospace;
-      font-size:13px;
-    }
-    h1 {
-      text-align:center;
-      color:#5fff00;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Link JSON Generator</title>
+<style>
+  body { font-family: Arial, sans-serif; background:#111; color:#eee; padding:20px; }
+  h1 { font-size:20px; margin-bottom:10px; }
+  label { display:block; margin-top:8px; font-size:14px; }
+  input, textarea, select {
+    width:100%; max-width:520px; padding:6px; margin-top:3px;
+    font-size:13px; box-sizing:border-box;
+  }
+  textarea { height:80px; }
+  .row { margin-top:15px; }
+  .form-block { margin-top:15px; padding:10px; background:#181818; border:1px solid #333; max-width:560px; }
+  .form-block.hidden { display:none; }
+  button { margin-top:12px; padding:8px 14px; font-size:14px; cursor:pointer; }
+  #output { margin-top:20px; padding:10px; background:#181818; border:1px solid #444; width:100%; max-width:600px; height:180px; font-family:monospace; font-size:13px; }
+  .hint { font-size:12px; color:#aaa; margin-top:4px; }
+</style>
 </head>
 <body>
 
-<h1>BOTW – Link Picker</h1>
+<h1>Link JSON Generator</h1>
 
-<label>URL</label>
-<input type="text" id="url" placeholder="https://example.com">
+<div class="row">
+  <label for="typeSelect">Choose template type:</label>
+  <select id="typeSelect">
+    <option value="">– Select –</option>
+    <option value="tools">Tools gallery item</option>
+    <option value="videos">Videos gallery item</option>
+    <option value="games">Games gallery item</option>
+    <option value="pictures">Pictures gallery item</option>
+    <option value="newsletter-item">Newsletter section item</option>
+  </select>
+</div>
 
-<label>Title</label>
-<input type="text" id="title" placeholder="Example Title">
+<!-- TOOLS -->
+<div id="form-tools" class="form-block hidden">
+  <strong>Tools gallery item (tools-gallery.json)</strong>
+  <label>Name</label>
+  <input id="tool-name" type="text" placeholder="ShareX">
+  <label>URL</label>
+  <input id="tool-url" type="text" placeholder="https://getsharex.com/">
+  <label>Description</label>
+  <textarea id="tool-description" placeholder="Screenshot and screen recording tool for Windows with powerful upload and automation options."></textarea>
+  <label>Category</label>
+  <input id="tool-category" type="text" value="Desktop">
+  <label>Platform</label>
+  <input id="tool-platform" type="text" value="Windows">
+  <label>Icon path</label>
+  <input id="tool-icon" type="text" placeholder="pics/tools/sharex.png">
+  <label>Label</label>
+  <input id="tool-label" type="text" value="Free">
+  <label>Added date (YYYY-MM-DD)</label>
+  <input id="tool-added" type="text">
+  <div class="hint">Paste the output as a new object in the tools-gallery.json array.</div>
+</div>
 
-<label>Description (optional)</label>
-<textarea id="desc" rows="2" placeholder="Short description..."></textarea>
+<!-- VIDEOS -->
+<div id="form-videos" class="form-block hidden">
+  <strong>Videos gallery item (videos-gallery.json)</strong>
+  <label>Title</label>
+  <input id="video-title" type="text" placeholder="Video title">
+  <label>URL</label>
+  <input id="video-url" type="text" placeholder="https://youtu.be/xxxxx">
+  <label>Thumbnail URL</label>
+  <input id="video-thumb" type="text" placeholder="https://img.youtube.com/vi/xxxxx/hqdefault.jpg">
+  <label>Category</label>
+  <input id="video-category" type="text" value="Music">
+  <label>Label</label>
+  <input id="video-label" type="text" value="Video">
+  <div class="hint">Paste as a new object in videos-gallery.json.</div>
+</div>
 
-<label>Category</label>
-<select id="category">
-  <option value="games">Games</option>
-  <option value="youtube">YouTube</option>
-  <option value="blog">Blog</option>
-  <option value="other">Other</option>
-</select>
+<!-- GAMES -->
+<div id="form-games" class="form-block hidden">
+  <strong>Games gallery item (games-gallery.json)</strong>
+  <label>Name</label>
+  <input id="game-name" type="text" placeholder="OpenTTD">
+  <label>URL</label>
+  <input id="game-url" type="text" placeholder="https://www.openttd.org/">
+  <label>Description</label>
+  <textarea id="game-description" placeholder="Open source Transport Tycoon Deluxe. Trains, trucks, planes and a ridiculous amount of micromanagement."></textarea>
+  <label>Category</label>
+  <input id="game-category" type="text" value="PC">
+  <label>Platform</label>
+  <input id="game-platform" type="text" value="Windows / macOS / Linux">
+  <label>Icon path</label>
+  <input id="game-icon" type="text" placeholder="pics/games/openttd.png">
+  <label>Label</label>
+  <input id="game-label" type="text" value="Free">
+  <label>Added date (YYYY-MM-DD)</label>
+  <input id="game-added" type="text">
+  <div class="hint">Paste as a new object in games-gallery.json.</div>
+</div>
 
-<label>Featured?</label>
-<select id="featured">
-  <option value="false">No</option>
-  <option value="true">Yes</option>
-</select>
+<!-- PICTURES -->
+<div id="form-pictures" class="form-block hidden">
+  <strong>Pictures gallery item (pictures-gallery.json)</strong>
+  <label>Image src</label>
+  <input id="pic-src" type="text" placeholder="pics/how-old-is-he/al-pacino-1974-photo.jpg">
+  <label>Title</label>
+  <input id="pic-title" type="text" placeholder="Al Pacino – 1974 photo">
+  <label>Category</label>
+  <input id="pic-category" type="text" value="How Old Is He">
+  <div class="hint">Paste as a new object in pictures-gallery.json.</div>
+</div>
 
-<button onclick="generateEntry()">Generate JSON Entry</button>
+<!-- NEWSLETTER ITEM -->
+<div id="form-newsletter-item" class="form-block hidden">
+  <strong>Newsletter section item (newsletter-index.json → issues[x].sections[y].items)</strong>
+  <label>Title</label>
+  <input id="nl-title" type="text" placeholder="Newsletter Title">
+  <label>URL</label>
+  <input id="nl-url" type="text" placeholder="https://youtu.be/xxxxx">
+  <label>Notes</label>
+  <textarea id="nl-notes" placeholder="Description"></textarea>
+  <label>Thumb (optional)</label>
+  <input id="nl-thumb" type="text" placeholder="">
+  <div class="hint">
+    Paste this object into the relevant <code>items</code> array inside the issue/section you want.
+    The rest of the newsletter (id, date, intro, etc.) you still handle by hand.
+  </div>
+</div>
 
-<div id="output" class="output-box"></div>
+<div class="row">
+  <button id="generateBtn">Generate JSON</button>
+</div>
+
+<div class="row">
+  <label for="output">Output (JSON object, no trailing comma):</label>
+  <textarea id="output" readonly></textarea>
+  <div class="hint">
+    Copy this block and paste it into the correct <code>.json</code> file
+    as a new item in the existing array.
+  </div>
+</div>
 
 <script>
-function slug(str) {
-  return str.toLowerCase()
-            .replace(/[^a-z0-9]+/g, '-')
-            .replace(/^-+|-+$/g, '');
+function setTodayIfEmpty(id) {
+  const el = document.getElementById(id);
+  if (el && !el.value) {
+    const d = new Date();
+    const iso = d.toISOString().slice(0,10); // YYYY-MM-DD
+    el.value = iso;
+  }
 }
 
-function generateEntry() {
-  const url = document.getElementById("url").value.trim();
-  const title = document.getElementById("title").value.trim();
-  const desc = document.getElementById("desc").value.trim();
-  const category = document.getElementById("category").value;
-  const featured = document.getElementById("featured").value === "true";
+// Show/hide forms based on selection
+const typeSelect = document.getElementById("typeSelect");
+const forms = {
+  tools: document.getElementById("form-tools"),
+  videos: document.getElementById("form-videos"),
+  games: document.getElementById("form-games"),
+  pictures: document.getElementById("form-pictures"),
+  "newsletter-item": document.getElementById("form-newsletter-item")
+};
 
-  if (!url || !title) {
-    alert("URL and Title are required");
+typeSelect.addEventListener("change", () => {
+  const val = typeSelect.value;
+  Object.keys(forms).forEach(key => {
+    forms[key].classList.add("hidden");
+  });
+  if (forms[val]) {
+    forms[val].classList.remove("hidden");
+  }
+});
+
+document.getElementById("generateBtn").addEventListener("click", () => {
+  const type = typeSelect.value;
+  let obj = null;
+
+  if (!type) {
+    alert("Choose a template type first.");
     return;
   }
 
-  const id = slug(title);
-  const added = new Date().toISOString().slice(0, 10);
+  if (type === "tools") {
+    setTodayIfEmpty("tool-added");
+    obj = {
+      name: document.getElementById("tool-name").value,
+      url: document.getElementById("tool-url").value,
+      description: document.getElementById("tool-description").value,
+      category: document.getElementById("tool-category").value,
+      platform: document.getElementById("tool-platform").value,
+      icon: document.getElementById("tool-icon").value,
+      label: document.getElementById("tool-label").value,
+      added: document.getElementById("tool-added").value
+    };
+  }
 
-  const entry = {
-    id,
-    title,
-    url,
-    category,
-    description: desc || "",
-    featured,
-    added
-  };
+  if (type === "videos") {
+    obj = {
+      thumb: document.getElementById("video-thumb").value,
+      title: document.getElementById("video-title").value,
+      url: document.getElementById("video-url").value,
+      category: document.getElementById("video-category").value,
+      label: document.getElementById("video-label").value
+    };
+  }
 
-  document.getElementById("output").textContent =
-    JSON.stringify(entry, null, 2);
-}
+  if (type === "games") {
+    setTodayIfEmpty("game-added");
+    obj = {
+      name: document.getElementById("game-name").value,
+      url: document.getElementById("game-url").value,
+      description: document.getElementById("game-description").value,
+      category: document.getElementById("game-category").value,
+      platform: document.getElementById("game-platform").value,
+      icon: document.getElementById("game-icon").value,
+      label: document.getElementById("game-label").value,
+      added: document.getElementById("game-added").value
+    };
+  }
+
+  if (type === "pictures") {
+    obj = {
+      src: document.getElementById("pic-src").value,
+      title: document.getElementById("pic-title").value,
+      category: document.getElementById("pic-category").value
+    };
+  }
+
+  if (type === "newsletter-item") {
+    obj = {
+      title: document.getElementById("nl-title").value,
+      url: document.getElementById("nl-url").value,
+      notes: document.getElementById("nl-notes").value,
+      thumb: document.getElementById("nl-thumb").value
+    };
+  }
+
+  const out = document.getElementById("output");
+  out.value = obj ? JSON.stringify(obj, null, 2) : "";
+  out.focus();
+  out.select();
+});
 </script>
 
 </body>
