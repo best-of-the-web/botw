@@ -5,41 +5,37 @@
   <title>Tools – Greg's Best of the Web 1.0</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="bestoftheweb.css">
+
 </head>
 <body>
 
   <div class="wrap-page">
 
-    <!-- Header include -->
     <div id="site-header" class="site-header"></div>
 
     <main>
       <h2 class="page-title">Tools</h2>
 
       <div class="layout">
-
-        <!-- MAIN CONTENT -->
         <section class="main-content">
 
           <p class="center">
             Desktop and web tools worth actually installing. No bloat, no nags.
           </p>
 
-          <div id="tool-groups">
-            <!-- Tool groups will be injected here -->
-          </div>
+          <!-- Category tabs -->
+          <div id="tool-tabs" class="tabs"></div>
+
+          <!-- Tools grid -->
+          <div class="tools-grid" id="tool-gallery"></div>
 
         </section>
 
-        <!-- SIDEBAR -->
         <aside id="site-sidebar" class="sidebar"></aside>
-
       </div>
     </main>
 
-    <!-- Footer include -->
     <div id="site-footer" class="site-footer"></div>
-
   </div>
 
   <script src="includes.js"></script>
@@ -47,83 +43,90 @@
   <script>
     const TOOLS_JSON = "tools-gallery.json";
 
-    async function loadTools() {
-      const container = document.getElementById("tool-groups");
-      if (!container) return;
+    let allTools = [];
+    let filteredTools = [];
+    let currentCategory = "All";
 
+    const tTabsEl = document.getElementById("tool-tabs");
+    const tGalleryEl = document.getElementById("tool-gallery");
+
+    async function loadTools() {
       try {
         const res = await fetch(TOOLS_JSON + "?v=" + Date.now());
         if (!res.ok) throw new Error(res.status + " " + res.statusText);
-        const tools = await res.json();
-        if (!Array.isArray(tools) || !tools.length) {
-          container.innerHTML = "<p class='center'><small>No tools listed yet.</small></p>";
-          return;
-        }
+        const data = await res.json();
+        if (!Array.isArray(data)) throw new Error("JSON is not an array");
 
-        // group by category
-        const groups = {};
-        tools.forEach(tool => {
-          const cat = tool.category || "Other";
-          if (!groups[cat]) groups[cat] = [];
-          groups[cat].push(tool);
-        });
-
-        // optional: sort each group by name
-        Object.keys(groups).forEach(cat => {
-          groups[cat].sort((a, b) => (a.name || "").localeCompare(b.name || ""));
-        });
-
-        const categories = Object.keys(groups).sort();
-        container.innerHTML = "";
-
-        categories.forEach(cat => {
-          const groupDiv = document.createElement("div");
-          groupDiv.className = "tool-group";
-          groupDiv.innerHTML = `<h3 class="tool-group-title">${cat}</h3>`;
-
-          const listDiv = document.createElement("div");
-          listDiv.className = "tool-list";
-
-          groups[cat].forEach(tool => {
-            const card = document.createElement("article");
-            card.className = "tool-card";
-
-            const iconSrc = tool.icon || "pics/tools/tool-default.png";
-            const platform = tool.platform || "";
-            const label = tool.label || "";
-
-            card.innerHTML = `
-              <div class="tool-icon">
-                <img src="${iconSrc}" alt="">
-              </div>
-              <div class="tool-body">
-                <h4 class="tool-name">
-                  <a href="${tool.url}" target="_blank" rel="noopener">
-                    ${tool.name || "Unnamed tool"}
-                  </a>
-                </h4>
-                <p class="tool-desc">${tool.description || ""}</p>
-                <div class="tool-meta">
-                  ${platform ? `<span class="tool-tag">${platform}</span>` : ""}
-                  ${label ? `<span class="tool-tag tool-tag-accent">${label}</span>` : ""}
-                  <a class="tool-link" href="${tool.url}" target="_blank" rel="noopener">
-                    Visit site
-                  </a>
-                </div>
-              </div>
-            `;
-
-            listDiv.appendChild(card);
-          });
-
-          groupDiv.appendChild(listDiv);
-          container.appendChild(groupDiv);
-        });
-
+        allTools = data;
+        setupToolCategories();
+        setToolCategory("All");
       } catch (err) {
         console.error("Failed to load tools JSON", err);
-        container.innerHTML = "<p class='center'><small>Could not load tools.</small></p>";
+        tGalleryEl.innerHTML = "<p class='center'><small>Could not load tools.</small></p>";
       }
+    }
+
+    function setupToolCategories() {
+      const cats = new Set();
+      allTools.forEach(t => {
+        if (t.category) cats.add(t.category);
+      });
+
+      const categories = ["All", ...Array.from(cats).sort()];
+      tTabsEl.innerHTML = categories.map(cat => `
+        <button class="tab" data-cat="${cat}">${cat}</button>
+      `).join("");
+
+      tTabsEl.addEventListener("click", e => {
+        const btn = e.target.closest(".tab");
+        if (!btn) return;
+        setToolCategory(btn.dataset.cat);
+      });
+    }
+
+    function setToolCategory(cat) {
+      currentCategory = cat;
+
+      filteredTools =
+        cat === "All" ? allTools.slice() : allTools.filter(t => t.category === cat);
+
+      document.querySelectorAll("#tool-tabs .tab").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.cat === cat);
+      });
+
+      renderToolGallery();
+    }
+
+    function renderToolGallery() {
+      tGalleryEl.innerHTML = "";
+
+      if (!filteredTools.length) {
+        tGalleryEl.innerHTML = "<p class='center'><small>No tools found.</small></p>";
+        return;
+      }
+
+      filteredTools.forEach(tool => {
+        const div = document.createElement("div");
+        div.className = "tool-card-pixel";
+
+        const iconSrc = tool.icon || "pics/tools/tool-default.png";
+        const name = tool.name || "Unnamed tool";
+
+        div.innerHTML = `
+          <img src="${iconSrc}" alt="">
+          <a class="tool-name" href="${tool.url}" target="_blank" rel="noopener">
+            ${name}
+          </a>
+          <div class="tool-tags">
+            ${tool.platform ? `<span class="tool-tag">${tool.platform}</span>` : ""}
+            ${tool.label ? `<span class="tool-tag tool-tag-accent">${tool.label}</span>` : ""}
+            ${tool.category ? `<span class="tool-tag">${tool.category}</span>` : ""}
+          </div>
+          <p class="tool-desc">${tool.description || ""}</p>
+        `;
+
+        tGalleryEl.appendChild(div);
+      });
     }
 
     document.addEventListener("DOMContentLoaded", loadTools);
