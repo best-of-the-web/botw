@@ -10,27 +10,30 @@
 
 <div class="wrap-page">
 
+  <!-- Header -->
   <div id="site-header" class="site-header"></div>
 
   <main>
     <h2 class="page-title">Games</h2>
 
     <div class="layout">
+
+      <!-- MAIN CONTENT -->
       <section class="main-content">
 
         <p class="center">
-          Retro PC games, freeware classics and open-source goodies.
+          Quick, no-faff games – some hosted here, some out on the wider web.
         </p>
 
-        <!-- Category Tabs -->
-        <div id="game-tabs" class="tabs"></div>
+        <div id="games-tabs" class="tabs"></div>
 
-        <!-- Gallery -->
-        <div id="game-gallery" class="games-grid"></div>
+        <div class="thumb-grid" id="games-gallery"></div>
 
       </section>
 
+      <!-- SIDEBAR -->
       <aside id="site-sidebar" class="sidebar"></aside>
+
     </div>
   </main>
 
@@ -42,31 +45,90 @@
 
 <script>
   const GAMES_JSON = "games-gallery.json";
-  const FALLBACK_ICON = "pics/games/game-default.png";
 
   let allGames = [];
   let filteredGames = [];
-  let currentCategory = "All";
+  let currentGameCat = "All";
 
-  const tabsEl = document.getElementById("game-tabs");
-  const galleryEl = document.getElementById("game-gallery");
+  const gameTabsEl = document.getElementById("games-tabs");
+  const gameGridEl = document.getElementById("games-gallery");
 
   async function loadGames() {
     try {
       const res = await fetch(GAMES_JSON + "?v=" + Date.now());
-      if (!res.ok) throw new Error(res.status);
-      allGames = await res.json();
+      if (!res.ok) throw new Error(res.status + " " + res.statusText);
+      const data = await res.json();
+      if (!Array.isArray(data)) throw new Error("JSON is not an array");
 
-      setupCategories();
-      setCategory("All");
-
-    } catch (e) {
-      galleryEl.innerHTML = "<p class='center'><small>Failed to load games.</small></p>";
+      allGames = data;
+      setupGameTabs();
+      setGameCategory("All");
+    } catch (err) {
+      console.error("Failed to load games JSON", err);
+      gameGridEl.innerHTML = "<p class='center'><small>Could not load games.</small></p>";
     }
   }
 
-  function setupCategories() {
+  function setupGameTabs() {
     const cats = new Set();
-    allGames.forEach(g => g.category && cats.add(g.category));
+    allGames.forEach(g => { if (g.category) cats.add(g.category); });
 
-    const list = ["All", ...Array.from(cats]()
+    const categories = ["All", ...Array.from(cats).sort()];
+
+    gameTabsEl.innerHTML = categories.map(cat => `
+      <button class="tab" data-cat="${cat}">${cat}</button>
+    `).join("");
+
+    gameTabsEl.addEventListener("click", (e) => {
+      const btn = e.target.closest(".tab");
+      if (!btn) return;
+      setGameCategory(btn.dataset.cat);
+    });
+  }
+
+  function setGameCategory(cat) {
+    currentGameCat = cat;
+    filteredGames = (cat === "All")
+      ? allGames.slice()
+      : allGames.filter(g => g.category === cat);
+
+    document.querySelectorAll(".tab").forEach(btn => {
+      btn.classList.toggle("active", btn.dataset.cat === cat);
+    });
+
+    renderGamesGrid();
+  }
+
+  function renderGamesGrid() {
+    gameGridEl.innerHTML = "";
+
+    if (!filteredGames.length) {
+      gameGridEl.innerHTML = "<p class='center'><small>No games in this category.</small></p>";
+      return;
+    }
+
+    filteredGames.forEach(game => {
+      const icon = game.icon || "pics/games/game-default.png";
+      const name = game.name || game.title || "Untitled game";
+      const desc = game.desc || "";
+
+      const card = document.createElement("div");
+      card.className = "thumb-card";
+
+      // If it's an internal game page, url can just be "how-old-is-he.html" etc.
+      card.innerHTML = `
+        <a href="${game.url || '#'}" target="_blank" rel="noopener">
+          <img src="${icon}" alt="${name}">
+        </a>
+        <small><strong>${name}</strong>${desc ? " – " + desc : ""}</small>
+      `;
+
+      gameGridEl.appendChild(card);
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", loadGames);
+</script>
+
+</body>
+</html>
