@@ -2,10 +2,56 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Newsletter – Greg's Best of the Web 1.0</title>
+  <title>Newsletter – Greg's Best of the Web</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="bestoftheweb.css">
+  <style>
+    .newsletter-wrap {
+      max-width: 700px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+    .newsletter-box {
+      border: 1px solid #333366;
+      background: #050515;
+      padding: 20px;
+      border-radius: 8px;
+    }
+    .newsletter-desc {
+      margin-bottom: 20px;
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+    input[type="email"] {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #333366;
+      background: #0a0f20;
+      color: #fff;
+      margin-bottom: 12px;
+    }
+    .btn-subscribe {
+      background: #111a33;
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      font-size: 1rem;
+    }
+    .btn-subscribe:hover {
+      background: #1d2b55;
+    }
+    .note {
+      margin-top: 15px;
+      font-size: 0.85rem;
+      opacity: 0.7;
+    }
+  </style>
 </head>
+
 <body>
 
 <div class="wrap-page">
@@ -16,26 +62,26 @@
   <main>
     <h2 class="page-title">Newsletter</h2>
 
-    <div class="layout">
+    <div class="newsletter-wrap">
+      <div class="newsletter-box">
+        
+        <p class="newsletter-desc">
+          A weekly email, best of the web, every Friday.
+        </p>
 
-      <!-- MAIN CONTENT -->
-      <section class="main-content">
+        <!-- SIGNUP FORM -->
+        <form action="#" method="POST" id="signup-form">
+          <input type="email" id="email" name="email" placeholder="Your email…" required>
+          <button type="submit" class="btn-subscribe">Subscribe</button>
+        </form>
 
-        <!-- HERO (latest issue) -->
-        <div id="newsletter-hero" class="newsletter-hero"></div>
+        <p class="note">
+          You’ll get one email a week.
+        </p>
 
-        <!-- ISSUE VIEWER -->
-        <div id="newsletter-issue"></div>
-
-        <!-- ARCHIVE -->
-        <h3 class="section-title">Archive</h3>
-        <div id="newsletter-archive"></div>
-
-      </section>
-
-      <aside id="site-sidebar" class="sidebar"></aside>
-
+      </div>
     </div>
+
   </main>
 
   <!-- Footer -->
@@ -45,105 +91,12 @@
 
 <script src="includes.js"></script>
 
+<!-- Fake handler for now (replace later with real provider) -->
 <script>
-  const NEWSLETTER_JSON = "newsletter-index.json";
-
-  async function loadNewsletter() {
-    const heroEl = document.getElementById("newsletter-hero");
-    const issueEl = document.getElementById("newsletter-issue");
-    const archiveEl = document.getElementById("newsletter-archive");
-
-    let data = null;
-    try {
-      data = await fetch(NEWSLETTER_JSON + "?v=" + Date.now()).then(r => r.json());
-    } catch (e) {
-      heroEl.innerHTML = "<p><small>Could not load newsletter.</small></p>";
-      return;
-    }
-
-    const issueId = parseInt(new URLSearchParams(location.search).get("issue"), 10);
-    const latestId = data.latest;
-    const issue = data.issues.find(i => i.id === (issueId || latestId));
-    const latest = data.issues.find(i => i.id === latestId);
-
-    renderHero(heroEl, latest);
-    renderIssue(issueEl, issue);
-    renderArchive(archiveEl, data.issues);
-  }
-
-  function renderHero(el, issue) {
-    if (!issue) return;
-    el.innerHTML = `
-      <div class="newsletter-hero-card">
-        <h3>Issue #${issue.id} — ${issue.date}</h3>
-        <h2>${issue.title}</h2>
-        <p>${issue.intro || ""}</p>
-        <div class="row">
-          <a class="btn btn-newsletter" href="newsletter.html?issue=${issue.id}">Read Issue</a>
-          <button class="btn" id="copy-email">Copy Email Version</button>
-        </div>
-      </div>
-    `;
-    setTimeout(() => {
-      const btn = document.getElementById("copy-email");
-      if (btn) btn.addEventListener("click", () => copyEmailVersion(issue));
-    }, 50);
-  }
-
-  function renderIssue(el, issue) {
-    if (!issue) return;
-
-    let html = `<h3 id="issue-title">Issue #${issue.id} — ${issue.date}</h3>`;
-    html += `<h2>${issue.title}</h2>`;
-    html += `<p>${issue.intro || ""}</p>`;
-
-    issue.sections.forEach(section => {
-      html += `<h3 class="newsletter-section">${section.heading}</h3>`;
-      section.items.forEach(item => {
-        html += `
-          <div class="newsletter-item">
-            <h4><a href="${item.url}" target="_blank">${item.title}</a></h4>
-            <p>${item.notes || ""}</p>
-          </div>
-        `;
-      });
-    });
-
-    el.innerHTML = html;
-  }
-
-  function renderArchive(el, issues) {
-    let html = `<div class="newsletter-archive-grid">`;
-    issues.forEach(issue => {
-      html += `
-        <a class="newsletter-archive-card" href="newsletter.html?issue=${issue.id}">
-          <strong>Issue #${issue.id}</strong><br>
-          <span>${issue.date}</span><br>
-          <em>${issue.title}</em>
-        </a>
-      `;
-    });
-    html += `</div>`;
-    el.innerHTML = html;
-  }
-
-  function copyEmailVersion(issue) {
-    let txt = `${issue.title} (${issue.date})\n\n`;
-    txt += (issue.intro || "") + "\n\n";
-
-    issue.sections.forEach(section => {
-      txt += section.heading.toUpperCase() + "\n";
-      section.items.forEach(item => {
-        txt += `• ${item.title}\n  ${item.notes || ""}\n\n`;
-      });
-    });
-
-    navigator.clipboard.writeText(txt).then(() => {
-      alert("Copied email version to clipboard!");
-    });
-  }
-
-  document.addEventListener("DOMContentLoaded", loadNewsletter);
+document.getElementById("signup-form").addEventListener("submit", function(e) {
+  e.preventDefault();
+  alert("Subscription submitted (placeholder). Replace form action with your email provider.");
+});
 </script>
 
 </body>

@@ -6,284 +6,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="bestoftheweb.css">
 </head>
-<body>
 
-  <div class="wrap-page">
+<body data-json="videos-gallery.json">
 
-    <!-- Header include -->
-    <div id="site-header" class="site-header"></div>
+<div class="wrap-page">
 
-    <main>
-      <h2 class="page-title">Video Gallery</h2>
+  <div id="site-header" class="site-header"></div>
 
-      <div class="layout">
+  <main>
+    <h2 class="page-title">Video Gallery</h2>
 
-        <!-- MAIN CONTENT -->
-        <section class="main-content">
+    <div class="layout">
+      <section class="main-content">
 
-          <p class="center">
-            A gallery of YouTube and other videos, organised into categories.
-          </p>
+        <p class="center">Web videos</p>
 
-          <!-- Category tabs -->
-          <div id="video-tabs" class="tabs"></div>
+        <div class="tabs"></div>
+        <div class="thumb-grid"></div>
 
-          <!-- Gallery grid -->
-          <div class="thumb-grid" id="video-gallery">
-            <!-- Thumbnails injected by JS -->
-          </div>
+      </section>
 
-          <!-- Pagination -->
-          <div id="video-pagination" class="pagination"></div>
-
-        </section>
-
-        <!-- SIDEBAR -->
-        <aside id="site-sidebar" class="sidebar"></aside>
-
-      </div>
-    </main>
-
-    <!-- Footer include -->
-    <div id="site-footer" class="site-footer"></div>
-
-  </div>
-
-  <script src="includes.js"></script>
-
-  <script>
-    const VIDEO_PAGE_SIZE = 24;
-    const VIDEO_JSON = "videos-gallery.json";
-
-    let allVideos = [];
-    let currentCategory = "All";
-    let filteredVideos = [];
-    let currentPage = 1;
-    let videoLightboxIndex = 0;
-
-    const vTabsEl = document.getElementById("video-tabs");
-    const vGalleryEl = document.getElementById("video-gallery");
-    const vPaginationEl = document.getElementById("video-pagination");
-
-    // Lightbox elements
-    let vLbEl, vLbFrame, vLbCaption, vLbPrev, vLbNext, vLbClose;
-
-    async function loadVideos() {
-      try {
-        const res = await fetch(VIDEO_JSON + "?v=" + Date.now());
-        if (!res.ok) throw new Error(res.status + " " + res.statusText);
-        const data = await res.json();
-        if (!Array.isArray(data)) throw new Error("JSON is not an array");
-
-        allVideos = data;
-        setupVideoCategories();
-        setVideoCategory("All");
-      } catch (err) {
-        console.error("Failed to load videos JSON", err);
-        vGalleryEl.innerHTML = "<p><small>Could not load video gallery.</small></p>";
-      }
-    }
-
-    function setupVideoCategories() {
-      const cats = new Set();
-      allVideos.forEach(v => {
-        if (v.category) cats.add(v.category);
-      });
-
-      const categories = ["All", ...Array.from(cats).sort()];
-      vTabsEl.innerHTML = categories.map(cat => `
-        <button class="tab" data-cat="${cat}">${cat}</button>
-      `).join("");
-
-      vTabsEl.addEventListener("click", (e) => {
-        const btn = e.target.closest(".tab");
-        if (!btn) return;
-        setVideoCategory(btn.dataset.cat);
-      });
-    }
-
-    function setVideoCategory(cat) {
-      currentCategory = cat;
-      currentPage = 1;
-
-      filteredVideos = (cat === "All")
-        ? allVideos.slice()
-        : allVideos.filter(v => v.category === cat);
-
-      document.querySelectorAll("#video-tabs .tab").forEach(btn => {
-        btn.classList.toggle("active", btn.dataset.cat === cat);
-      });
-
-      renderVideoGallery();
-      renderVideoPagination();
-    }
-
-    function renderVideoGallery() {
-      vGalleryEl.innerHTML = "";
-
-      if (!filteredVideos.length) {
-        vGalleryEl.innerHTML = "<p class='center'><small>No videos in this category.</small></p>";
-        return;
-      }
-
-      const start = (currentPage - 1) * VIDEO_PAGE_SIZE;
-      const end = start + VIDEO_PAGE_SIZE;
-      const slice = filteredVideos.slice(start, end);
-
-      slice.forEach((vid, idx) => {
-        const globalIndex = start + idx;
-        const div = document.createElement("div");
-        div.className = "thumb-card";
-
-        const thumbSrc = vid.thumb || "";
-        const title = vid.title || "";
-        const label = vid.label ? ` <small>(${vid.label})</small>` : "";
-
-        div.innerHTML = `
-          <img src="${thumbSrc}"
-               alt="${title}"
-               data-index="${globalIndex}"
-               class="video-thumb">
-          <small>${title}${label}</small>
-        `;
-
-        vGalleryEl.appendChild(div);
-      });
-
-      vGalleryEl.querySelectorAll(".video-thumb").forEach(img => {
-        img.addEventListener("click", () => {
-          const idx = parseInt(img.getAttribute("data-index"), 10);
-          openVideoLightbox(idx);
-        });
-      });
-    }
-
-    function renderVideoPagination() {
-      vPaginationEl.innerHTML = "";
-      const total = filteredVideos.length;
-      if (total <= VIDEO_PAGE_SIZE) return;
-
-      const totalPages = Math.ceil(total / VIDEO_PAGE_SIZE);
-      const prevDisabled = (currentPage === 1) ? "disabled" : "";
-      const nextDisabled = (currentPage === totalPages) ? "disabled" : "";
-
-      vPaginationEl.innerHTML = `
-        <button class="page-btn" ${prevDisabled} data-dir="prev">&laquo; Prev</button>
-        <span class="page-info">Page ${currentPage} of ${totalPages}</span>
-        <button class="page-btn" ${nextDisabled} data-dir="next">Next &raquo;</button>
-      `;
-
-      vPaginationEl.querySelectorAll(".page-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-          const dir = btn.dataset.dir;
-          if (dir === "prev" && currentPage > 1) {
-            currentPage--;
-          } else if (dir === "next" && currentPage < totalPages) {
-            currentPage++;
-          }
-          renderVideoGallery();
-          renderVideoPagination();
-        });
-      });
-    }
-
-    // ---------- Video Lightbox ----------
-
-    function setupVideoLightbox() {
-      vLbEl      = document.getElementById("video-lightbox");
-      vLbFrame   = document.getElementById("video-frame");
-      vLbCaption = document.getElementById("video-caption");
-      vLbPrev    = document.getElementById("video-lightbox-prev");
-      vLbNext    = document.getElementById("video-lightbox-next");
-      vLbClose   = document.getElementById("video-lightbox-close");
-
-      vLbPrev.addEventListener("click", () => navVideoLightbox(-1));
-      vLbNext.addEventListener("click", () => navVideoLightbox(1));
-      vLbClose.addEventListener("click", closeVideoLightbox);
-
-      vLbEl.addEventListener("click", (e) => {
-        if (e.target === vLbEl) closeVideoLightbox();
-      });
-
-      document.addEventListener("keydown", (e) => {
-        if (vLbEl.classList.contains("hidden")) return;
-        if (e.key === "Escape") closeVideoLightbox();
-        if (e.key === "ArrowLeft") navVideoLightbox(-1);
-        if (e.key === "ArrowRight") navVideoLightbox(1);
-      });
-    }
-
-    function openVideoLightbox(index) {
-      videoLightboxIndex = index;
-      showVideoLightboxItem();
-      vLbEl.classList.remove("hidden");
-    }
-
-    function closeVideoLightbox() {
-      vLbEl.classList.add("hidden");
-      // stop playback
-      vLbFrame.src = "";
-    }
-
-    function navVideoLightbox(step) {
-      const max = filteredVideos.length;
-      videoLightboxIndex = (videoLightboxIndex + step + max) % max;
-      showVideoLightboxItem();
-    }
-
-    function showVideoLightboxItem() {
-      const vid = filteredVideos[videoLightboxIndex];
-      if (!vid) return;
-      const videoUrl = vid.url || "";
-      const embedUrl = toEmbedUrl(videoUrl);
-      vLbFrame.src = embedUrl ? embedUrl : "";
-      vLbCaption.textContent = vid.title || "";
-    }
-
-    // Convert a YouTube URL (short or long) to embed URL
-    function toEmbedUrl(url) {
-      if (!url) return "";
-      try {
-        const u = new URL(url);
-        if (u.hostname.includes("youtu.be")) {
-          const id = u.pathname.slice(1);
-          return "https://www.youtube.com/embed/" + id + "?autoplay=1";
-        }
-        if (u.hostname.includes("youtube.com")) {
-          const id = u.searchParams.get("v");
-          if (id) return "https://www.youtube.com/embed/" + id + "?autoplay=1";
-        }
-        // fallback – just return original
-        return url;
-      } catch (e) {
-        return url;
-      }
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      setupVideoLightbox();
-      loadVideos();
-    });
-  </script>
-
-  <!-- VIDEO LIGHTBOX OVERLAY -->
-  <div id="video-lightbox" class="lightbox hidden">
-    <div class="lightbox-inner">
-      <button id="video-lightbox-close" class="lightbox-close">✕</button>
-      <div class="video-wrapper">
-        <iframe id="video-frame"
-                src=""
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen></iframe>
-      </div>
-      <div id="video-caption" class="lightbox-caption"></div>
-      <div class="lightbox-nav">
-        <button id="video-lightbox-prev">&laquo; Prev</button>
-        <button id="video-lightbox-next">Next &raquo;</button>
-      </div>
+      <aside id="site-sidebar" class="sidebar"></aside>
     </div>
-  </div>
+  </main>
+
+  <div id="site-footer" class="site-footer"></div>
+
+</div>
+
+<script src="includes.js"></script>
+<script src="gallery.js"></script>
 
 </body>
 </html>

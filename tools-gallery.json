@@ -1,52 +1,23 @@
 [
   {
-    "name": "ShareX",
-    "url": "https://getsharex.com/",
-    "description": "Screenshot and screen recording tool for Windows with powerful upload and automation options.",
-    "category": "Desktop",
-    "platform": "Windows",
-    "icon": "pics/tools/sharex.png",
-    "label": "Free",
-    "added": "2025-11-20"
-  },
-  {
-    "name": "OBS Studio",
-    "url": "https://obsproject.com/",
-    "description": "Open source streaming and recording studio. Great for capturing gameplay, tutorials, and streams.",
-    "category": "Desktop",
-    "platform": "Windows / macOS / Linux",
-    "icon": "pics/tools/obs.png",
-    "label": "Free",
-    "added": "2025-11-20"
-  },
-  {
-    "name": "Notepad++",
-    "url": "https://notepad-plus-plus.org/",
-    "description": "Lightweight text editor with tabs, syntax highlighting, and plug-ins.",
-    "category": "Desktop",
-    "platform": "Windows",
-    "icon": "pics/tools/notepadpp.png",
-    "label": "Free",
-    "added": "2025-11-19"
-  },
-  {
-    "name": "qBittorrent",
+    "title": "qBittorrent",
+    "thumb": "pics/tools/thumb-qbittorrent.png",
     "url": "https://www.qbittorrent.org/",
-    "description": "Open source torrent client that isn’t full of nonsense.",
     "category": "Desktop",
-    "platform": "Windows / macOS / Linux",
-    "icon": "pics/tools/qbittorrent.png",
-    "label": "Free",
-    "added": "2025-11-19"
+    "desc": ""
   },
   {
-    "name": "AutoHotkey",
-    "url": "https://www.autohotkey.com/",
-    "description": "Scripting and hotkey tool for automating repetitive tasks on Windows.",
-    "category": "Power tools",
-    "platform": "Windows",
-    "icon": "pics/tools/autohotkey.png",
-    "label": "Scriptable",
-    "added": "2025-11-18"
+    "title": "OBS Studio",
+    "thumb": "pics/tools/obs.png",
+    "url": "https://obsproject.com/",
+    "category": "Desktop",
+    "desc": "Open source streaming and recording suite."
+  },
+  {
+    "title": "Notepad++",
+    "thumb": "pics/tools/notepadpp.png",
+    "url": "https://notepad-plus-plus.org/",
+    "category": "Desktop",
+    "desc": "Lightweight text editor with plugins."
   }
 ]

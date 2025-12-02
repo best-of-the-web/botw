@@ -207,26 +207,6 @@ a:active {
   font-size: 13px;
 }
 
-.page-btn {
-  padding: 6px 10px;
-  margin: 0 6px;
-  border-radius: 4px;
-  border: 1px solid #444488;
-  background: #000033;
-  color: #ffffff;
-  cursor: pointer;
-}
-
-.page-btn[disabled] {
-  opacity: 0.4;
-  cursor: default;
-}
-
-.page-info {
-  display: inline-block;
-  margin: 0 6px;
-}
-
 /* ===============================
    Retro thumbnail styling
    =============================== */
@@ -264,64 +244,15 @@ a:active {
   display: none;
 }
 
-.lightbox {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.8);
-  z-index: 9999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
-.lightbox-inner {
-  max-width: 90vw;
-  max-height: 90vh;
-  background: #000010;
-  border: 2px solid #5fff00;
-  border-radius: 8px;
-  padding: 10px;
-  position: relative;
-  text-align: center;
-}
-
-.lightbox-inner img {
-  max-width: 100%;
-  max-height: 70vh;
-  border: 2px solid #444488;
-  border-radius: 4px;
-}
 
 .lightbox-caption {
   margin-top: 8px;
   font-size: 13px;
 }
 
-.lightbox-nav {
-  margin-top: 8px;
-}
 
-.lightbox-nav button {
-  padding: 6px 12px;
-  margin: 0 6px;
-  border-radius: 4px;
-  border: 1px solid #444488;
-  background: #000033;
-  color: #ffffff;
-  cursor: pointer;
-}
 
-.lightbox-close {
-  position: absolute;
-  top: 4px;
-  right: 6px;
-  padding: 2px 8px;
-  border-radius: 4px;
-  border: 1px solid #444488;
-  background: #330000;
-  color: #ffffff;
-  cursor: pointer;
-}
 .lightbox.hidden {
   display: none;
   
