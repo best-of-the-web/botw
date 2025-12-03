@@ -90,13 +90,13 @@ function renderCards(containerId, items, type) {
       imgSrc = item.thumb || "";
       linkHref = "videos.html";
     } else if (type === "picture") {
-      imgSrc = item.src || "";
+      imgSrc = item.thumb || "";
       linkHref = "pictures.html";
     } else if (type === "tool") {
-      imgSrc = item.icon || "pics/tools/tool-default.png";
+      imgSrc = item.thumb || "pics/tools/tool-default.png";
       linkHref = "tools.html";
     } else if (type === "game") {
-      imgSrc = item.icon || "pics/games/game-default.png";
+      imgSrc = item.thumb || "pics/games/game-default.png";
       linkHref = "games.html";
     }
 

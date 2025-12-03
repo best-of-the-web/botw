@@ -6,15 +6,6 @@
 
   <p id="footer-updated"></p>
 
-  <button onclick="randomLink()">Random Link</button>
-  <script>
-  async function randomLink() {
-    const res = await fetch('links.json');
-    const items = await res.json();
-    const pick = items[Math.floor(Math.random() * items.length)];
-    window.location = pick.url;
-  }
-  </script>
 
   <p>© 2025 Greg – Best of the Web 1.0</p>
 </div>

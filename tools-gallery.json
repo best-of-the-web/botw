@@ -8,14 +8,14 @@
   },
   {
     "title": "OBS Studio",
-    "thumb": "pics/tools/obs.png",
+    "thumb": "pics/tools/thumb-qbittorrent.png",
     "url": "https://obsproject.com/",
     "category": "Desktop",
     "desc": "Open source streaming and recording suite."
   },
   {
     "title": "Notepad++",
-    "thumb": "pics/tools/notepadpp.png",
+    "thumb": "pics/tools/thumb-qbittorrent.png",
     "url": "https://notepad-plus-plus.org/",
     "category": "Desktop",
     "desc": "Lightweight text editor with plugins."
