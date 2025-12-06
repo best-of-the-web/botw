@@ -4,18 +4,18 @@
     "thumb": "pics/tools/thumb-qbittorrent.png",
     "url": "https://www.qbittorrent.org/",
     "category": "Desktop",
-    "desc": ""
+    "desc": "Who knows what this does."
   },
   {
-    "title": "OBS Studio",
-    "thumb": "pics/tools/thumb-qbittorrent.png",
-    "url": "https://obsproject.com/",
+    "title": "Winamp Legacy Player",
+    "thumb": "pics/tools/thumb-winamp.png",
+    "url": "https://winamp.com/player",
     "category": "Desktop",
-    "desc": "Open source streaming and recording suite."
+    "desc": "Sweet 90's mp3 player."
   },
   {
     "title": "Notepad++",
-    "thumb": "pics/tools/thumb-qbittorrent.png",
+    "thumb": "pics/tools/thumb-notepad.svg",
     "url": "https://notepad-plus-plus.org/",
     "category": "Desktop",
     "desc": "Lightweight text editor with plugins."
