@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Notts or Not</title>
+  <style>
+    body { font-family: Arial; text-align: center; }
+    #game img { width: 400px; height: auto; margin: 20px 0; }
+    .btn { padding: 10px 20px; margin: 10px; cursor: pointer; }
+    #result { margin: 15px 0; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <h1>Notts or Not</h1>
+
+  <div id="game">
+    <img id="pic" src="" alt="">
+    <div>
+      <button class="btn" onclick="guess(true)">Notts</button>
+      <button class="btn" onclick="guess(false)">Not</button>
+    </div>
+    <div id="result"></div>
+    <div id="progress"></div>
+  </div>
+
+  <script src="notts-or-not.js"></script>
+</body>
+</html>

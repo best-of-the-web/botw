@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Do I Enjoy Going to the Pub?</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="bestoftheweb.css">
+
+<style>
+/* TEMP INLINE STYLES — will migrate later */
+
+/* Page wrapper match */
+.page-pub-quiz .quiz-wrap {
+  max-width: 700px;
+  margin: 0 auto;
+  background: #000010;
+  border: 2px solid #333366;
+  border-radius: 6px;
+  padding: 16px;
+}
+
+/* Question card */
+.pub-question {
+  background: #000022;
+  border: 1px solid #444488;
+  border-radius: 4px;
+  padding: 14px;
+  margin-bottom: 14px;
+  font-size: 14px;
+}
+
+/* Answers */
+.answer-btn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px;
+  margin: 6px 0;
+  border-radius: 4px;
+  background: #000033;
+  border: 1px solid #444488;
+  color: #fff;
+  cursor: pointer;
+}
+.answer-btn:hover {
+  border-color: #5fff00;
+}
+
+/* Final result */
+#resultBox {
+  background: #000022;
+  border: 1px solid #5fff00;
+  padding: 14px;
+  margin-top: 20px;
+  border-radius: 4px;
+  font-size: 16px;
+  display: none;
+}
+
+</style>
+</head>
+
+<body class="page-pub-quiz">
+
+<div class="wrap-page">
+  <div id="site-header"></div>
+
+  <h2 class="center">Do I Enjoy Going to the Pub?</h2>
+
+  <div class="quiz-wrap">
+    <div id="questionBox"></div>
+    <div id="resultBox"></div>
+  </div>
+
+  <div id="site-footer"></div>
+</div>
+
+<script src="includes.js"></script>
+
+<script>
+// === QUIZ QUESTIONS ===
+// Score logic: 0 = dislikes pub, 2 = neutral, 4 = likes pub.
+
+const QUESTIONS = [
+  {
+    q: "1. When you picture going to the pub, what feeling comes first?",
+    options: [
+      { text: "Ugh, effort.", score: 0 },
+      { text: "Bit mixed.", score: 2 },
+      { text: "Nice, I’m up for it.", score: 4 }
+    ]
+  },
+  {
+    q: "2. Do you enjoy conversation with background pub noise?",
+    options: [
+      { text: "No, I'd rather quiet.", score: 0 },
+      { text: "Sometimes.", score: 2 },
+      { text: "Yes, great atmosphere.", score: 4 }
+    ]
+  },
+  {
+    q: "3. If someone invited you tonight, would you secretly hope they cancel?",
+    options: [
+      { text: "Absolutely.", score: 0 },
+      { text: "Depends who.", score: 2 },
+      { text: "No, I'd go.", score: 4 }
+    ]
+  },
+  {
+    q: "4. When you’re actually there, do you get into it?",
+    options: [
+      { text: "Mostly not.", score: 0 },
+      { text: "If it’s the right person.", score: 2 },
+      { text: "Yeah, usually.", score: 4 }
+    ]
+  },
+  {
+    q: "5. Do you prefer one or two drinks somewhere calmer than a pub?",
+    options: [
+      { text: "Yes, 100%.", score: 0 },
+      { text: "Depends the pub.", score: 2 },
+      { text: "Nah, pub is better.", score: 4 }
+    ]
+  },
+  {
+    q: "6. Do you like the *idea* of pubs more than the reality?",
+    options: [
+      { text: "Yes, that’s me.", score: 0 },
+      { text: "Sometimes.", score: 2 },
+      { text: "No, reality is great.", score: 4 }
+    ]
+  },
+  {
+    q: "7. Do you ever feel like you *should* enjoy pubs more than you do?",
+    options: [
+      { text: "Yes.", score: 0 },
+      { text: "Not sure.", score: 2 },
+      { text: "No.", score: 4 }
+    ]
+  },
+  {
+    q: "8. Would you go to a pub alone?",
+    options: [
+      { text: "No chance.", score: 0 },
+      { text: "Maybe in the right context.", score: 2 },
+      { text: "Yes, no problem.", score: 4 }
+    ]
+  },
+  {
+    q: "9. Does the noise/people-watching bother you?",
+    options: [
+      { text: "Yes, drains me.", score: 0 },
+      { text: "I notice it.", score: 2 },
+      { text: "Doesn’t faze me.", score: 4 }
+    ]
+  },
+  {
+    q: "10. After a pub trip, do you often think you lost time you could’ve used better?",
+    options: [
+      { text: "Yes, often.", score: 0 },
+      { text: "Sometimes.", score: 2 },
+      { text: "Not really.", score: 4 }
+    ]
+  }
+];
+
+let current = 0;
+let totalScore = 0;
+
+const questionBox = document.getElementById("questionBox");
+const resultBox = document.getElementById("resultBox");
+
+function renderQuestion() {
+  const q = QUESTIONS[current];
+  questionBox.innerHTML = `
+    <div class="pub-question">${q.q}</div>
+    ${q.options.map((o,i) =>
+      `<button class="answer-btn" onclick="handleAnswer(${o.score})">${o.text}</button>`
+    ).join("")}
+  `;
+}
+
+function handleAnswer(score) {
+  totalScore += score;
+  current++;
+
+  if (current >= QUESTIONS.length) {
+    finishQuiz();
+  } else {
+    renderQuestion();
+  }
+}
+
+function finishQuiz() {
+  questionBox.style.display = "none";
+  let verdict = "";
+
+  if (totalScore <= 12) {
+    verdict = "You don’t really enjoy going to the pub. You like the *idea* of it more than the experience.";
+  } else if (totalScore <= 24) {
+    verdict = "You’re neutral. Right pub, right person, right mood — otherwise not fussed.";
+  } else {
+    verdict = "Yes — you *do* enjoy the pub, when the vibe is right.";
+  }
+
+  resultBox.innerHTML = `<strong>Your Result:</strong><br>${verdict}`;
+  resultBox.style.display = "block";
+}
+
+renderQuestion();
+</script>
+</body>
+</html>
