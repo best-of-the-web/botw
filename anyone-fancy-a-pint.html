@@ -65,7 +65,7 @@
 <div class="wrap-page">
   <div id="site-header"></div>
 
-  <h2 class="center">Do I Enjoy Going to the Pub?</h2>
+  <h2 class="center">Do You Enjoy Going to the Pub?</h2>
 
   <div class="quiz-wrap">
     <div id="questionBox"></div>
@@ -85,81 +85,81 @@ const QUESTIONS = [
   {
     q: "1. When you picture going to the pub, what feeling comes first?",
     options: [
-      { text: "Ugh, effort.", score: 0 },
-      { text: "Bit mixed.", score: 2 },
-      { text: "Nice, I’m up for it.", score: 4 }
+      { text: "Can't be arsed", score: 0 },
+      { text: "Don't mind", score: 2 },
+      { text: "Lets gooooo!!", score: 4 }
     ]
   },
   {
     q: "2. Do you enjoy conversation with background pub noise?",
     options: [
-      { text: "No, I'd rather quiet.", score: 0 },
-      { text: "Sometimes.", score: 2 },
-      { text: "Yes, great atmosphere.", score: 4 }
+      { text: "No", score: 0 },
+      { text: "Sometimes", score: 2 },
+      { text: "Yes", score: 4 }
     ]
   },
   {
-    q: "3. If someone invited you tonight, would you secretly hope they cancel?",
+    q: "3. When someone invites you to the pub, do you secretly hope they cancel?",
     options: [
-      { text: "Absolutely.", score: 0 },
-      { text: "Depends who.", score: 2 },
-      { text: "No, I'd go.", score: 4 }
+      { text: "Yes", score: 0 },
+      { text: "Depends who it is", score: 2 },
+      { text: "No", score: 4 }
     ]
   },
   {
     q: "4. When you’re actually there, do you get into it?",
     options: [
-      { text: "Mostly not.", score: 0 },
-      { text: "If it’s the right person.", score: 2 },
-      { text: "Yeah, usually.", score: 4 }
+      { text: "No", score: 0 },
+      { text: "Sometimes", score: 2 },
+      { text: "Yes", score: 4 }
     ]
   },
   {
-    q: "5. Do you prefer one or two drinks somewhere calmer than a pub?",
+    q: "5. Do you prefer a couple of drinks somewhere calmer than a pub?",
     options: [
-      { text: "Yes, 100%.", score: 0 },
-      { text: "Depends the pub.", score: 2 },
-      { text: "Nah, pub is better.", score: 4 }
+      { text: "Yes", score: 0 },
+      { text: "Depends on the pub.", score: 2 },
+      { text: "Pubs are the best!", score: 4 }
     ]
   },
   {
     q: "6. Do you like the *idea* of pubs more than the reality?",
     options: [
-      { text: "Yes, that’s me.", score: 0 },
-      { text: "Sometimes.", score: 2 },
-      { text: "No, reality is great.", score: 4 }
+      { text: "Yes", score: 0 },
+      { text: "Sometimes", score: 2 },
+      { text: "No, I LOVE pubs!", score: 4 }
     ]
   },
   {
     q: "7. Do you ever feel like you *should* enjoy pubs more than you do?",
     options: [
-      { text: "Yes.", score: 0 },
-      { text: "Not sure.", score: 2 },
-      { text: "No.", score: 4 }
+      { text: "Yes", score: 0 },
+      { text: "Not sure", score: 2 },
+      { text: "No", score: 4 }
     ]
   },
   {
     q: "8. Would you go to a pub alone?",
     options: [
-      { text: "No chance.", score: 0 },
+      { text: "Nope!.", score: 0 },
       { text: "Maybe in the right context.", score: 2 },
-      { text: "Yes, no problem.", score: 4 }
+      { text: "Yes, it's great!", score: 4 }
     ]
   },
   {
     q: "9. Does the noise/people-watching bother you?",
     options: [
-      { text: "Yes, drains me.", score: 0 },
-      { text: "I notice it.", score: 2 },
-      { text: "Doesn’t faze me.", score: 4 }
+      { text: "Yes", score: 0 },
+      { text: "Not really", score: 2 },
+      { text: "The what?", score: 4 }
     ]
   },
   {
-    q: "10. After a pub trip, do you often think you lost time you could’ve used better?",
+    q: "10. After a pub trip, do you often think you wasted time you could’ve used better?",
     options: [
-      { text: "Yes, often.", score: 0 },
+      { text: "Yes", score: 0 },
       { text: "Sometimes.", score: 2 },
-      { text: "Not really.", score: 4 }
+      { text: "No - I'm in the pub right now!", score: 4 }
     ]
   }
 ];
@@ -196,11 +196,11 @@ function finishQuiz() {
   let verdict = "";
 
   if (totalScore <= 12) {
-    verdict = "You don’t really enjoy going to the pub. You like the *idea* of it more than the experience.";
+    verdict = "You don’t really enjoy going to the pub.";
   } else if (totalScore <= 24) {
-    verdict = "You’re neutral. Right pub, right person, right mood — otherwise not fussed.";
+    verdict = "You don't mind going to the pub.";
   } else {
-    verdict = "Yes — you *do* enjoy the pub, when the vibe is right.";
+    verdict = "You bloody love going to the pub.";
   }
 
   resultBox.innerHTML = `<strong>Your Result:</strong><br>${verdict}`;

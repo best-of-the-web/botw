@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Greg's Best of the Web — Notts or Not</title>
 
-  <!-- Your site's global CSS -->
   <link rel="stylesheet" href="bestoftheweb.css">
 </head>
 
@@ -15,10 +14,8 @@
 <div class="wrap-page">
   <div class="center">
 
-    <!-- Header -->
     <div id="site-header"></div>
 
-    <!-- GAME BOX -->
     <div class="game-wrapper">
       <h1>Notts or Not</h1>
 
@@ -29,21 +26,19 @@
         <button class="game-btn" onclick="guess(false)">Not</button>
       </div>
 
+      <!-- FEEDBACK BAR -->
       <div id="result"></div>
+
       <div id="progress"></div>
     </div>
 
-    <!-- Footer -->
     <div id="site-footer"></div>
 
   </div>
 </div>
 
-
-<!-- Includes header + footer -->
 <script src="includes.js"></script>
 
-<!-- 90s Game Styling -->
 <style>
   .game-wrapper {
     max-width: 600px;
@@ -90,22 +85,50 @@
     background: #40ffff;
   }
 
+  /* ==========================
+     NEW FEEDBACK BAR STYLING
+     ========================== */
+
   #result {
     margin: 12px 0;
     font-weight: bold;
-    background: #006b6b;
-    padding: 6px;
+    padding: 12px;
     border: 2px solid #004f4f;
-    display: inline-block;
-    min-width: 140px;
+    display: block;
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+    font-family: "Arial Black";
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
   }
 
-  #progress {
-    margin-top: 4px;
-    font-size: 14px;
-    opacity: 0.9;
+  /* Correct */
+  .result-correct {
+    background: #00cc66;
+    color: #003300;
+    animation: correct-flash 0.25s ease-out;
   }
 
+  @keyframes correct-flash {
+    0% { background: #66ff99; }
+    100% { background: #00cc66; }
+  }
+
+  /* Wrong */
+  .result-wrong {
+    background: #cc0033;
+    color: #330000;
+    animation: wrong-flash 0.25s ease-out;
+  }
+
+  @keyframes wrong-flash {
+    0% { background: #ff6688; }
+    100% { background: #cc0033; }
+  }
+
+  /* END SCREEN */
   .end-screen {
     font-family: "Arial Black";
     font-size: 22px;
@@ -132,58 +155,67 @@
   }
 </style>
 
-<!-- GAME LOGIC -->
 <script>
   let data = [];
   let index = 0;
   let score = 0;
 
-// Shuffle function (Fisher–Yates)
-function shuffle(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
+  function shuffle(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
   }
-  return arr;
-}
 
-fetch('notts-or-not.json')
-  .then(res => res.json())
-  .then(json => {
-    // Shuffle all 12
-    const shuffled = shuffle(json);
-
-    // Take first 10 only
-    data = shuffled.slice(0, 10);
-
-    loadImage();
-  });
 
   function loadImage() {
+    const resultEl = document.getElementById('result');
+    resultEl.textContent = "";
+    resultEl.classList.remove("result-correct", "result-wrong");
+
     const item = data[index];
     document.getElementById('pic').src = item.img;
-    document.getElementById('result').textContent = "";
     document.getElementById('progress').textContent =
       `Image ${index + 1} of ${data.length}`;
   }
 
+
+  function startGame(json) {
+    const shuffled = shuffle(json.slice());
+    data = shuffled.slice(0, 10);
+    index = 0;
+    score = 0;
+    loadImage();
+  }
+
+
   function guess(choice) {
+    const resultEl = document.getElementById('result');
     const correct = data[index].isNotts;
+
+    resultEl.classList.remove("result-correct", "result-wrong");
 
     if (choice === correct) {
       score++;
-      document.getElementById('result').textContent = "Correct!";
+      resultEl.textContent = "Correct!";
+      resultEl.classList.add("result-correct");
     } else {
-      document.getElementById('result').textContent = "Wrong!";
+      resultEl.textContent = "Wrong!";
+      resultEl.classList.add("result-wrong");
     }
 
     index++;
 
     setTimeout(() => {
-      if (index < data.length) loadImage();
-      else endGame();
-    }, 500);
+      if (index < data.length) {
+        loadImage();
+      } else {
+        endGame();
+      }
+    }, 600);
   }
+
 
   function endGame() {
     document.querySelector('.game-wrapper').innerHTML = `
@@ -194,6 +226,16 @@ fetch('notts-or-not.json')
       </div>
     `;
   }
+
+
+  document.addEventListener("DOMContentLoaded", () => {
+    fetch('notts-or-not.json')
+      .then(res => res.json())
+      .then(startGame)
+      .catch(err => console.error(err));
+  });
+
+  window.guess = guess;
 </script>
 
 </body>

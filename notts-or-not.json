@@ -1,52 +1,15 @@
 [
-  {
-    "id": 1,
-    "img": "https://via.placeholder.com/400x250?text=Image+1",
-    "isNotts": true
-  },
-  {
-    "id": 2,
-    "img": "https://via.placeholder.com/400x250?text=Image+2",
-    "isNotts": false
-  },
-  {
-    "id": 3,
-    "img": "https://via.placeholder.com/400x250?text=Image+3",
-    "isNotts": true
-  },
-  {
-    "id": 4,
-    "img": "https://via.placeholder.com/400x250?text=Image+4",
-    "isNotts": false
-  },
-  {
-    "id": 5,
-    "img": "https://via.placeholder.com/400x250?text=Image+5",
-    "isNotts": true
-  },
-  {
-    "id": 6,
-    "img": "https://via.placeholder.com/400x250?text=Image+6",
-    "isNotts": false
-  },
-  {
-    "id": 7,
-    "img": "https://via.placeholder.com/400x250?text=Image+7",
-    "isNotts": true
-  },
-  {
-    "id": 8,
-    "img": "https://via.placeholder.com/400x250?text=Image+8",
-    "isNotts": false
-  },
-  {
-    "id": 9,
-    "img": "https://via.placeholder.com/400x250?text=Image+9",
-    "isNotts": true
-  },
-  {
-    "id": 10,
-    "img": "https://via.placeholder.com/400x250?text=Image+10",
-    "isNotts": false
-  }
+  { "img": "pics/notts-or-not/img/notts-or-not-001.jpg", "isNotts": true },
+  { "img": "pics/notts-or-not/img/notts-or-not-002.jpg", "isNotts": true },
+  { "img": "pics/notts-or-not/img/notts-or-not-003.jpg", "isNotts": true },
+  { "img": "pics/notts-or-not/img/notts-or-not-004.jpg", "isNotts": true },
+  { "img": "pics/notts-or-not/img/notts-or-not-005.jpg", "isNotts": true },
+  { "img": "pics/notts-or-not/img/notts-or-not-006.jpg", "isNotts": true },
+
+  { "img": "pics/notts-or-not/img/notts-or-not-007.jpg", "isNotts": false },
+  { "img": "pics/notts-or-not/img/notts-or-not-008.jpg", "isNotts": false },
+  { "img": "pics/notts-or-not/img/notts-or-not-009.jpg", "isNotts": false },
+  { "img": "pics/notts-or-not/img/notts-or-not-010.jpg", "isNotts": false },
+  { "img": "pics/notts-or-not/img/notts-or-not-011.jpg", "isNotts": false },
+  { "img": "pics/notts-or-not/img/notts-or-not-012.jpg", "isNotts": false }
 ]

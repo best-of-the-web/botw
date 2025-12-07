@@ -1,7 +1,14 @@
 [
   {
+    "title": "Notts or Not?",
+    "thumb": "pics/games/thumb-notts-or-not.png",
+    "url": "/notts-or-not.html",
+    "category": "Browser",
+    "desc": "Is it in Notts, or not?"
+  },  
+  {
     "title": "How Old <i>is</i> he?",
-    "thumb": "pics/thumb-hoih.gif",
+    "thumb": "pics/games/thumb-hoih.gif",
     "url": "/how-old-is-he.html",
     "category": "Browser",
     "desc": "You'll never guess how old he is!"
