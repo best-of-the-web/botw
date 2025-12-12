@@ -83,14 +83,16 @@
 
 <script>
 let DATA = [];
+let FULL_DATA = [];
 let i = 0;
 let score = 0;
 let streak = 0;
 
 const qs = new URLSearchParams(location.search);
-const setName = qs.get("set") || "default";
+const setName = qs.get("set") || "massive";
 const dataUrl = `how-old-is-he-${setName}.json`;
 
+/* Grab elements */
 const els = {
   photo: document.getElementById("photo"),
   name: document.getElementById("name"),
@@ -106,15 +108,29 @@ const els = {
   nextRow: document.getElementById("nextRow")
 };
 
-async function loadData(){
+/* Fisher–Yates shuffle */
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+async function loadData() {
   const res = await fetch(dataUrl);
-  DATA = await res.json();
+  FULL_DATA = await res.json();
+
+  // Shuffle whole dataset and take 12
+  DATA = shuffle([...FULL_DATA]).slice(0, 12);
+
   els.total.textContent = DATA.length;
   showCard();
 }
 
-function showCard(){
+function showCard() {
   const cur = DATA[i];
+
   els.photo.src = cur.img;
   els.name.textContent = cur.name;
   els.context.textContent = cur.knownFor || "";
@@ -123,13 +139,14 @@ function showCard(){
   els.feedback.classList.add("hidden");
   els.nextRow.classList.add("hidden");
   els.guessInput.value = "";
+  els.guessInput.focus();
 }
 
-function handleGuess(){
+function handleGuess() {
   let g = parseInt(els.guessInput.value, 10);
   if (isNaN(g)) return;
 
-  // clamp to sensible range
+  // clamp
   if (g < 10) g = 10;
   if (g > 80) g = 80;
 
@@ -153,17 +170,25 @@ function handleGuess(){
   els.nextRow.classList.remove("hidden");
 }
 
+/* Button + Enter key */
 els.submitGuess.addEventListener("click", handleGuess);
 els.guessInput.addEventListener("keydown", e => {
   if (e.key === "Enter") handleGuess();
 });
 
+/* Next card */
 els.nextBtn.addEventListener("click", () => {
-  i = (i + 1) % DATA.length;
-  showCard();
+  i++;
+  if (i >= DATA.length) {
+    // GAME END — simple reset or show an end screen
+    alert(`Finished! Final score: ${score} / ${DATA.length}`);
+    location.reload();
+  } else {
+    showCard();
+  }
 });
 
-/* QUICK CHIP LOGIC */
+/* QUICK GUESS CHIPS */
 document.querySelectorAll(".guess-chip").forEach(btn => {
   btn.addEventListener("click", () => {
     els.guessInput.value = btn.dataset.age;

@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sherwood Quest – High Street Trials</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* === EARLY-90s DOS VIBE === */
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: #000000;
+      color: #33ff33;
+      font-family: "Courier New", monospace;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .crt {
+      width: 960px;
+      max-width: 100%;
+      border: 4px solid #33ff33;
+      padding: 8px;
+      box-sizing: border-box;
+      box-shadow: 0 0 20px rgba(51, 255, 51, 0.6);
+      background: #000000;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .crt::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+      background: linear-gradient(
+        rgba(0, 0, 0, 0),
+        rgba(0, 0, 0, 0.13)
+      );
+      background-size: 100% 3px;
+      mix-blend-mode: soft-light;
+      opacity: 0.5;
+    }
+
+    .frame {
+      border: 2px solid #33ff33;
+      padding: 4px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .titlebar {
+      background: #003300;
+      padding: 4px 8px;
+      border-bottom: 2px solid #33ff33;
+      font-weight: bold;
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+    }
+
+    .titlebar span.small {
+      font-size: 11px;
+      opacity: 0.8;
+    }
+
+    .main {
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      gap: 6px;
+      padding: 6px;
+      min-height: 360px;
+      box-sizing: border-box;
+    }
+
+    #location-name {
+      text-transform: uppercase;
+      font-weight: bold;
+      border-bottom: 1px solid #33ff33;
+      padding-bottom: 2px;
+      font-size: 14px;
+    }
+
+    .scene {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 8px;
+    }
+
+    #scene-image {
+      border: 1px solid #33ff33;
+      height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      text-align: center;
+      padding: 4px;
+    }
+
+    #scene-image .placeholder {
+      border: 1px dashed #33ff33;
+      padding: 4px;
+    }
+
+    #scene-text {
+      font-size: 13px;
+      line-height: 1.35;
+      white-space: pre-wrap;
+    }
+
+    #message {
+      min-height: 24px;
+      font-size: 12px;
+      color: #00ffff;
+      margin-top: 4px;
+      white-space: pre-wrap;
+    }
+
+    .choices {
+      border-top: 1px solid #33ff33;
+      padding-top: 4px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .btn {
+      background: #001900;
+      color: #33ff33;
+      border: 1px solid #33ff33;
+      padding: 3px 8px;
+      font-family: inherit;
+      font-size: 12px;
+      cursor: pointer;
+      text-transform: uppercase;
+    }
+
+    .btn:hover {
+      background: #004400;
+    }
+
+    .btn.disabled {
+      opacity: 0.4;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .inventory-bar {
+      border-top: 2px solid #33ff33;
+      padding: 4px 6px 2px;
+      font-size: 11px;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    #inventory {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 2px;
+    }
+
+    .inv-item {
+      border: 1px solid #33ff33;
+      padding: 1px 4px;
+      font-size: 11px;
+      margin-right: 2px;
+    }
+
+    .status-text {
+      font-size: 11px;
+      opacity: 0.85;
+    }
+
+    .highlight {
+      color: #ffff33;
+    }
+
+    @media (max-width: 700px) {
+      .scene {
+        grid-template-columns: 1fr;
+      }
+      #scene-image {
+        height: 100px;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="crt">
+  <div class="frame">
+    <div class="titlebar">
+      <div>Sherwood Quest – High Street Trials</div>
+      <span class="small">© 1993 (definitely not 2025)</span>
+    </div>
+    <div class="main">
+      <div id="location-name"></div>
+      <div class="scene">
+        <div id="scene-image"></div>
+        <div id="scene-text"></div>
+      </div>
+      <div id="message"></div>
+      <div id="choices" class="choices"></div>
+    </div>
+    <div class="inventory-bar">
+      <div>Inventory: <span id="inventory"></span></div>
+      <div class="status-text" id="status-text"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // === GAME DATA ===
+  // You can later move this into locations.json and fetch it.
+  const REQUIRED_ITEMS = [
+    "aa-battery",
+    "greasy-napkin",
+    "chicken-keyring",
+    "stick",
+    "parking-ticket",
+    "nail-varnish",
+    "vape-spray"
+  ];
+
+  const locations = {
+    highstreet: {
+      id: "highstreet",
+      type: "hub",
+      name: "Sherwood High Street",
+      img: "img/highstreet.png",
+      text: "You stand on Sherwood High Street.\nNeon signs, chicken bones and vape clouds blur into one.\n\nWhere now?",
+      exits: [
+        { label: "AtoZ Pound Shop", target: "atoz" },
+        { label: "Chicken Shop #1", target: "chicken1" },
+        { label: "Chicken Shop #2", target: "chicken2" },
+        { label: "The Grange (Park)", target: "grange" },
+        { label: "Car Park", target: "carpark" },
+        { label: "Nail Bar", target: "nailbar" },
+        { label: "Random Vape Shop", target: "vape" },
+        { label: "Library (Boarded Up)", target: "library" }
+      ]
+    },
+
+    atoz: {
+      id: "atoz",
+      type: "puzzle",
+      name: "AtoZ Pound Shop",
+      img: "atoz.png",
+      intro: "You step into AtoZ. A sea of £1 tat stretches into infinity.\nThe fluorescent lights hum with regret.",
+      puzzle: {
+        prompt: "Three 'Mystery Boxes' sit on the counter. One contains AA batteries, the others… sorrow.",
+        options: [
+          {
+            label: "Mystery Box A (suspicious rattle)",
+            correct: false,
+            failText: "Just novelty moustaches and glitter. Grim."
+          },
+          {
+            label: "Mystery Box B (solid clunk)",
+            correct: true,
+            successText: "You crack it open and find a single lonely AA battery."
+          },
+          {
+            label: "Mystery Box C (no sound at all)",
+            correct: false,
+            failText: "It's a broken snow globe of Skegness."
+          }
+        ]
+      },
+      rewardItem: "aa-battery",
+      rewardLabel: "AA Battery",
+      onClearedText: "You've already looted the best of AtoZ. The rest is just sadness.",
+      returnTo: "highstreet"
+    },
+
+    chicken1: {
+      id: "chicken1",
+      type: "puzzle",
+      name: "Chicken Shop #1",
+      img: "img/chicken1.png",
+      intro: "Warm grease fogs the window. The menu is a wall of yellowed plastic letters.",
+      puzzle: {
+        prompt: "The 'Mega Saver Deal' is mispriced. Which combo is secretly the best value?",
+        options: [
+          {
+            label: "3 wings + fries + drink",
+            correct: true,
+            successText: "You do the maths. Somehow you win by 20p. The lad behind the counter nods respectfully."
+          },
+          {
+            label: "2-piece meal + fries",
+            correct: false,
+            failText: "You overpay like a tourist. He smirks."
+          },
+          {
+            label: "Family bucket (for one)",
+            correct: false,
+            failText: "Ambitious. Financially foolish."
+          }
+        ]
+      },
+      rewardItem: "greasy-napkin",
+      rewardLabel: "Greasy Napkin with Code",
+      onClearedText: "The same lad just shrugs. 'You already cracked it, bruv.'",
+      returnTo: "highstreet"
+    },
+
+    chicken2: {
+      id: "chicken2",
+      type: "puzzle",
+      name: "Chicken Shop #2",
+      img: "img/chicken2.png",
+      intro: "This chicken shop looks identical but somehow more cursed.\nA man in a cap eyes you from behind the counter.",
+      puzzle: {
+        prompt: "He leans in. 'Answer me this and I'll give you something special.'\n\n\"What comes once in a minute, twice in a moment, but never in a thousand years?\"",
+        options: [
+          {
+            label: "Time",
+            correct: false,
+            failText: "He snorts. 'Seen too many Facebook memes, you.'"
+          },
+          {
+            label: "The letter M",
+            correct: true,
+            successText: "He grins and tosses you a cheap plastic chicken keyring."
+          },
+          {
+            label: "A chicken",
+            correct: false,
+            failText: "He just stares at you."
+          }
+        ]
+      },
+      rewardItem: "chicken-keyring",
+      rewardLabel: "Chicken Keyring",
+      onClearedText: "The riddle man has moved on. The magic (and food hygiene) is gone.",
+      returnTo: "highstreet"
+    },
+
+    grange: {
+      id: "grange",
+      type: "puzzle",
+      name: "The Grange (Park)",
+      img: "img/grange.png",
+      intro: "You step into the park. Dim streetlights. Occasional dog walkers. Occasional lads.",
+      puzzle: {
+        prompt: "A fork in the path: which way avoids the 'group of lads on the bench'?",
+        options: [
+          {
+            label: "Left, past the playground",
+            correct: true,
+            successText: "You slip by unnoticed and find a satisfyingly hefty stick."
+          },
+          {
+            label: "Straight ahead, past the bench",
+            correct: false,
+            failText: "You get the 'Alright?' test. You survive, but it's awkward."
+          },
+          {
+            label: "Right, into the dark trees",
+            correct: false,
+            failText: "You immediately regret it and double back."
+          }
+        ]
+      },
+      rewardItem: "stick",
+      rewardLabel: "Mysterious Stick",
+      onClearedText: "You've already claimed the finest stick in the park.",
+      returnTo: "highstreet"
+    },
+
+    carpark: {
+      id: "carpark",
+      type: "puzzle",
+      name: "Back Car Park",
+      img: "img/carpark.png",
+      intro: "Dim sodium lights buzz overhead. Faded bay lines snake across broken tarmac.",
+      puzzle: {
+        prompt: "The pay-and-display machine flashes:\n\"ENTER LAST 3 DIGITS OF YOUR REG\"\n\nThree cars are parked:\n– N21 GBO\n– L90 VPE\n– M33 CRT\n\nWhich plate do you pretend is yours?",
+        options: [
+          {
+            label: "N21 GBO (BO)",
+            correct: false,
+            failText: "Ticket spits out: £90 fine. Classic."
+          },
+          {
+            label: "L90 VPE (VPE)",
+            correct: false,
+            failText: "The machine whirrs, then errors. No ticket."
+          },
+          {
+            label: "M33 CRT (CRT)",
+            correct: true,
+            successText: "The machine prints a crumpled ticket. Somehow it's valid for 'ALL VEHICLES'."
+          }
+        ]
+      },
+      rewardItem: "parking-ticket",
+      rewardLabel: "Wonky Parking Ticket",
+      onClearedText: "You already tricked the machine once. Don't push your luck.",
+      returnTo: "highstreet"
+    },
+
+    nailbar: {
+      id: "nailbar",
+      type: "puzzle",
+      name: "Nail Bar",
+      img: "img/nailbar.png",
+      intro: "Harsh white light, rows of tiny bottles. Everything smells faintly toxic and expensive.",
+      puzzle: {
+        prompt: "They offer to paint one item you own, any colour you like.\nWhich neon colour will best stand out in the dark library?",
+        options: [
+          {
+            label: "Neon Green",
+            correct: false,
+            failText: "Cool, but you'll blend into the DOS UI."
+          },
+          {
+            label: "Neon Pink",
+            correct: true,
+            successText: "Perfect. It will glow like a power LED from 1993."
+          },
+          {
+            label: "Neon Beige",
+            correct: false,
+            failText: "You monster."
+          }
+        ]
+      },
+      rewardItem: "nail-varnish",
+      rewardLabel: "Neon Nail Varnish",
+      onClearedText: "They remember you. No more freebies.",
+      returnTo: "highstreet"
+    },
+
+    vape: {
+      id: "vape",
+      type: "puzzle",
+      name: "Mysterious Vape Shop",
+      img: "img/vape.png",
+      intro: "You open a door and step into… a vape shop?\nIt definitely wasn't here yesterday.",
+      puzzle: {
+        prompt: "The guy behind the counter barely looks up.\n\"Pick a flavour, any flavour. Choose wisely.\"\n(You suspect this is some kind of test.)",
+        options: [
+          {
+            label: "Blue Razz Apocalypse",
+            correct: true,
+            successText: "He raises an eyebrow. \"Respect.\" He slides over a can of suspiciously strong body spray."
+          },
+          {
+            label: "Vanilla Custard Cloud",
+            correct: false,
+            failText: "\"Safe choice,\" he mutters. No reward."
+          },
+          {
+            label: "Tropical Dragon Unicorn Blast",
+            correct: false,
+            failText: "He sighs. \"Instagram flavour.\"\nYou get nothing."
+          }
+        ]
+      },
+      rewardItem: "vape-spray",
+      rewardLabel: "Overpowering Body Spray",
+      onClearedText: "Today the shop is a shuttered unit again. Weird.",
+      returnTo: "highstreet"
+    },
+
+    library: {
+      id: "library",
+      type: "final",
+      name: "Sherwood Library (Boarded Up)",
+      img: "img/library.png",
+      introLocked: "The doors are chained. A fading sign reads:\n\"CLOSED UNTIL FURTHER NOTICE\"\n\nYou get the feeling you'll need *everything* you've collected tonight to get in.",
+      intro: "Somehow the chains hang loose. The doors creak open.\nInside, dust, silence, and a single ancient PC on a desk.",
+      finalText: "You place your haul carefully:\n\n– AA battery into the rattling mouse\n– Greasy napkin wipes the filthy monitor\n– Chicken keyring opens the stuck drawer with the system disk\n– Stick reaches the reset switch round the back\n– Parking ticket wedges the power button just right\n– Neon varnish paints the dead power LED\n– Body spray acts as a makeshift contact cleaner\n\nThe PC wheezes to life. Green text fills the screen:\n\n  \"SHERWOOD QUEST COMPLETED.\n   USER: AUTHORIZED.\n   YOU MAY GO HOME NOW.\"\n\nYou step back out onto the high street. For once, it feels like you won.",
+      returnTo: null
+    }
+  };
+
+  // === GAME STATE ===
+  const state = {
+    currentLocationId: "highstreet",
+    inventory: new Set(),
+    clearedLocations: new Set(),
+    gameOver: false
+  };
+
+  // === HELPERS ===
+  function hasAllRequiredItems() {
+    return REQUIRED_ITEMS.every(id => state.inventory.has(id));
+  }
+
+  function getLocation(id) {
+    return locations[id];
+  }
+
+  // === RENDER FUNCTIONS ===
+  function render() {
+    const loc = getLocation(state.currentLocationId);
+    const nameEl = document.getElementById("location-name");
+    const imageEl = document.getElementById("scene-image");
+    const textEl = document.getElementById("scene-text");
+    const msgEl = document.getElementById("message");
+    const choicesEl = document.getElementById("choices");
+    const invEl = document.getElementById("inventory");
+    const statusEl = document.getElementById("status-text");
+
+    msgEl.textContent = "";
+
+    // Location name
+    nameEl.textContent = loc.name || "";
+
+    // Image placeholder
+    const imgLabel = loc.img ? loc.img : "NO IMAGE";
+imageEl.innerHTML =
+  `<img src="${loc.img}" alt="${loc.name}" style="width:100%;height:auto;image-rendering:pixelated;">`;
+
+    // Main text
+    if (loc.type === "hub") {
+      textEl.textContent = loc.text;
+    } else if (loc.type === "puzzle") {
+      if (state.clearedLocations.has(loc.id)) {
+        textEl.textContent = (loc.onClearedText || "You've already cleared this place.") +
+          "\n\nPress RETURN TO HIGH STREET.";
+      } else {
+        textEl.textContent = (loc.intro || "") + "\n\n" + (loc.puzzle?.prompt || "");
+      }
+    } else if (loc.type === "final") {
+      if (!hasAllRequiredItems()) {
+        textEl.textContent = loc.introLocked || "It's locked.";
+      } else if (!state.gameOver) {
+        textEl.textContent = (loc.intro || "") + "\n\nPress 'BOOT THE PC' to finish.";
+      } else {
+        textEl.textContent = loc.finalText;
+      }
+    } else {
+      textEl.textContent = loc.text || "";
+    }
+
+    // Choices / buttons
+    choicesEl.innerHTML = "";
+    if (state.gameOver) {
+      const btn = createButton("RETURN TO HIGH STREET (RESTART)", () => restartGame());
+      choicesEl.appendChild(btn);
+    } else if (loc.type === "hub") {
+      loc.exits.forEach(ex => {
+        const btn = createButton(ex.label, () => goTo(ex.target));
+        // Grey-out library if not unlocked
+        if (ex.target === "library" && !hasAllRequiredItems()) {
+          btn.classList.add("disabled");
+          btn.title = "You need all items before you can enter.";
+        }
+        choicesEl.appendChild(btn);
+      });
+    } else if (loc.type === "puzzle") {
+      if (state.clearedLocations.has(loc.id)) {
+        const btn = createButton("RETURN TO HIGH STREET", () => goTo(loc.returnTo || "highstreet"));
+        choicesEl.appendChild(btn);
+      } else {
+        loc.puzzle.options.forEach((opt, idx) => {
+          const btn = createButton(`[${idx + 1}] ${opt.label}`, () => resolvePuzzleOption(loc.id, idx));
+          choicesEl.appendChild(btn);
+        });
+        const backBtn = createButton("BACK OUT QUIETLY", () => goTo(loc.returnTo || "highstreet"));
+        choicesEl.appendChild(backBtn);
+      }
+    } else if (loc.type === "final") {
+      if (!hasAllRequiredItems()) {
+        const backBtn = createButton("BACK TO HIGH STREET", () => goTo("highstreet"));
+        choicesEl.appendChild(backBtn);
+      } else if (!state.gameOver) {
+        const bootBtn = createButton("BOOT THE PC", () => triggerFinal());
+        choicesEl.appendChild(bootBtn);
+        const backBtn = createButton("LOSE YOUR NERVE (BACK)", () => goTo("highstreet"));
+        choicesEl.appendChild(backBtn);
+      } else {
+        const btn = createButton("RETURN TO HIGH STREET (RESTART)", () => restartGame());
+        choicesEl.appendChild(btn);
+      }
+    }
+
+    // Inventory
+    invEl.innerHTML = "";
+    if (state.inventory.size === 0) {
+      invEl.textContent = "none";
+    } else {
+      state.inventory.forEach(id => {
+        const span = document.createElement("span");
+        span.className = "inv-item";
+        const label = getItemLabel(id);
+        span.textContent = label;
+        invEl.appendChild(span);
+      });
+    }
+
+    // Status text
+    const count = state.inventory.size;
+    const needed = REQUIRED_ITEMS.length;
+    if (count >= needed) {
+      statusEl.innerHTML = `<span class="highlight">All items collected. The library might open now...</span>`;
+    } else {
+      statusEl.textContent = `Items collected: ${count}/${needed}`;
+    }
+  }
+
+  function createButton(label, handler) {
+    const btn = document.createElement("button");
+    btn.className = "btn";
+    btn.textContent = label;
+    btn.onclick = handler;
+    return btn;
+  }
+
+  function getItemLabel(id) {
+    // Use reward labels from locations
+    for (const key in locations) {
+      const loc = locations[key];
+      if (loc.rewardItem === id) return loc.rewardLabel || id;
+    }
+    return id;
+  }
+
+  // === GAME LOGIC ===
+  function goTo(id) {
+    const loc = getLocation(id);
+    if (!loc) return;
+    state.currentLocationId = id;
+    render();
+  }
+
+  function resolvePuzzleOption(locationId, optionIndex) {
+    const loc = getLocation(locationId);
+    const opt = loc.puzzle.options[optionIndex];
+    const msgEl = document.getElementById("message");
+
+    if (!opt) return;
+
+    if (opt.correct) {
+      msgEl.textContent = opt.successText || "That worked.";
+      // Give reward if not already
+      if (loc.rewardItem && !state.inventory.has(loc.rewardItem)) {
+        state.inventory.add(loc.rewardItem);
+      }
+      state.clearedLocations.add(locationId);
+    } else {
+      msgEl.textContent = opt.failText || "That didn't work.";
+    }
+
+    render();
+  }
+
+  function triggerFinal() {
+    const loc = getLocation("library");
+    if (!hasAllRequiredItems()) return;
+    state.gameOver = true;
+    const msgEl = document.getElementById("message");
+    msgEl.textContent = "The PC fans whirr. Something ancient is waking up...";
+    // Update text to final description
+    const textEl = document.getElementById("scene-text");
+    textEl.textContent = loc.finalText;
+    render();
+  }
+
+  function restartGame() {
+    state.currentLocationId = "highstreet";
+    state.inventory = new Set();
+    state.clearedLocations = new Set();
+    state.gameOver = false;
+    render();
+  }
+
+  // === INIT ===
+  render();
+</script>
+</body>
+</html>

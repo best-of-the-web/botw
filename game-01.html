@@ -1,0 +1,40 @@
+<div id="scene"></div>
+<div id="choices"></div>
+
+<script>
+let data = {
+  start: {
+    text: "You wake up in a dark room.",
+    img: "dark-room.jpg",
+    choices: [
+      { text: "Look around", next: "look" },
+      { text: "Go back to sleep", next: "sleep" }
+    ]
+  },
+  look: {
+    text: "You find a torch on the floor.",
+    choices: [{ text: "Pick it up", next: "torch" }]
+  },
+  sleep: {
+    text: "You fall asleep forever. The end.",
+    choices: []
+  }
+};
+
+let current = "start";
+
+function render() {
+  let s = data[current];
+  document.getElementById("scene").innerHTML = 
+    (s.img ? `<img src="${s.img}" />` : "") + `<p>${s.text}</p>`;
+  document.getElementById("choices").innerHTML = 
+    s.choices.map(c => `<button onclick="go('${c.next}')">${c.text}</button>`).join("");
+}
+
+function go(next) {
+  current = next;
+  render();
+}
+
+render();
+</script>
