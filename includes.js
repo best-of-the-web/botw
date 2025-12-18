@@ -11,9 +11,9 @@ async function loadFragment(targetId, file) {
   }
 }
 
-loadFragment("site-header", "header.html");
-loadFragment("site-sidebar", "sidebar.html");
-loadFragment("site-footer", "footer.html").then(() => {
+loadFragment("site-header", "components/header.html");
+loadFragment("site-sidebar", "components/sidebar.html");
+loadFragment("site-footer", "components/footer.html").then(() => {
   const upd = document.getElementById("footer-updated");
   if (upd) upd.textContent = "Updated: " + new Date().toDateString();
 });

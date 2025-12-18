@@ -1,23 +1,30 @@
 [
   {
+    "title": "Jellyfin",
+    "thumb": "pics/tools/thumb-jellyfin.png",
+    "url": "https://jellyfin.org/",
+    "category": "Desktop",
+    "desc": "Manage and stream your 'own' media"
+  },
+  {
     "title": "qBittorrent",
     "thumb": "pics/tools/thumb-qbittorrent.png",
     "url": "https://www.qbittorrent.org/",
     "category": "Desktop",
-    "desc": "Who knows what this does."
+    "desc": "Who knows what this does"
   },
   {
     "title": "Winamp Legacy Player",
     "thumb": "pics/tools/thumb-winamp.png",
     "url": "https://winamp.com/player",
     "category": "Desktop",
-    "desc": "Sweet 90's mp3 player."
+    "desc": "Sweet 90's mp3 player"
   },
   {
     "title": "Notepad++",
     "thumb": "pics/tools/thumb-notepad.svg",
     "url": "https://notepad-plus-plus.org/",
     "category": "Desktop",
-    "desc": "Lightweight text editor with plugins."
+    "desc": "Lightweight text editor with plugins"
   }
 ]
