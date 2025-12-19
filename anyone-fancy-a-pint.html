@@ -19,6 +19,13 @@
   padding: 16px;
 }
 
+/* Question counter */
+.question-counter {
+  font-size: 12px;
+  color: #8888cc;
+  margin-bottom: 6px;
+}
+
 /* Question card */
 .pub-question {
   background: #000022;
@@ -44,6 +51,7 @@
 }
 .answer-btn:hover {
   border-color: #5fff00;
+  background: #000044;
 }
 
 /* Final result */
@@ -55,6 +63,18 @@
   border-radius: 4px;
   font-size: 16px;
   display: none;
+}
+
+/* Replay link */
+.replay {
+  display: block;
+  margin-top: 12px;
+  font-size: 14px;
+  color: #5fff00;
+  text-decoration: none;
+}
+.replay:hover {
+  text-decoration: underline;
 }
 
 </style>
@@ -83,7 +103,7 @@
 
 const QUESTIONS = [
   {
-    q: "1. When you think about going to the pub, what feeling comes first?",
+    q: "When you think about going to the pub, what feeling comes first?",
     options: [
       { text: "Can't be arsed", score: 0 },
       { text: "Don't mind", score: 2 },
@@ -91,7 +111,7 @@ const QUESTIONS = [
     ]
   },
   {
-    q: "2. Do you enjoy conversation with background pub noise?",
+    q: "Do you enjoy conversation with background pub noise?",
     options: [
       { text: "No", score: 0 },
       { text: "Sometimes", score: 2 },
@@ -99,7 +119,7 @@ const QUESTIONS = [
     ]
   },
   {
-    q: "3. When someone invites you to the pub, do you secretly hope they cancel?",
+    q: "When someone invites you to the pub, do you secretly hope they cancel?",
     options: [
       { text: "Yes", score: 0 },
       { text: "Sometimes", score: 2 },
@@ -107,7 +127,7 @@ const QUESTIONS = [
     ]
   },
   {
-    q: "4. When you’re at the pub, do you have fun?",
+    q: "When you’re at the pub, do you have fun?",
     options: [
       { text: "No", score: 0 },
       { text: "Sometimes", score: 2 },
@@ -115,7 +135,7 @@ const QUESTIONS = [
     ]
   },
   {
-    q: "5. Would you prefer a few drinks somewhere calmer than the pub?",
+    q: "Would you prefer a few drinks somewhere calmer than the pub?",
     options: [
       { text: "Yes", score: 0 },
       { text: "Depends on the pub", score: 2 },
@@ -123,7 +143,7 @@ const QUESTIONS = [
     ]
   },
   {
-    q: "6. Do you like the idea of pubs more than the reality of pubs?",
+    q: "Do you like the idea of pubs more than the reality of pubs?",
     options: [
       { text: "Yes", score: 0 },
       { text: "Sometimes", score: 2 },
@@ -131,7 +151,7 @@ const QUESTIONS = [
     ]
   },
   {
-    q: "7. Do you ever feel like you should enjoy pubs more?",
+    q: "Do you ever feel like you should enjoy pubs more?",
     options: [
       { text: "Yes", score: 0 },
       { text: "I don't know", score: 2 },
@@ -139,7 +159,7 @@ const QUESTIONS = [
     ]
   },
   {
-    q: "8. Would you go to a pub alone?",
+    q: "Would you go to a pub alone?",
     options: [
       { text: "Nope!", score: 0 },
       { text: "Maybe!", score: 2 },
@@ -147,11 +167,11 @@ const QUESTIONS = [
     ]
   },
   {
-    q: "9. After another visit to the pub, do you think you wasted your life?",
+    q: "After another visit to the pub, do you think you wasted your life?",
     options: [
       { text: "Yes", score: 0 },
       { text: "Sometimes", score: 2 },
-      { text: "No - I'm in the pub right now!", score: 4 }
+      { text: "No – I’m in the pub right now!", score: 4 }
     ]
   }
 ];
@@ -165,8 +185,9 @@ const resultBox = document.getElementById("resultBox");
 function renderQuestion() {
   const q = QUESTIONS[current];
   questionBox.innerHTML = `
+    <div class="question-counter">Question ${current + 1} of ${QUESTIONS.length}</div>
     <div class="pub-question">${q.q}</div>
-    ${q.options.map((o,i) =>
+    ${q.options.map(o =>
       `<button class="answer-btn" onclick="handleAnswer(${o.score})">${o.text}</button>`
     ).join("")}
   `;
@@ -195,7 +216,11 @@ function finishQuiz() {
     verdict = "You love going to the pub.";
   }
 
-  resultBox.innerHTML = `<strong>Your Result:</strong><br>${verdict}`;
+  resultBox.innerHTML = `
+    <strong>Your Result:</strong><br><br>
+    ${verdict}
+    <a class="replay" href="">Try again</a>
+  `;
   resultBox.style.display = "block";
 }
 

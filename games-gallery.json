@@ -1,5 +1,12 @@
 [
   {
+    "title": "Anyone fancy a pint?",
+    "thumb": "pics/games/thumb-anyone-fancy-a-pint.png",
+    "url": "/anyone-fancy-a-pint.html",
+    "category": "Browser",
+    "desc": "Take the quiz"
+  },    
+  {
     "title": "Notts or Not?",
     "thumb": "pics/games/thumb-notts-or-not.png",
     "url": "/notts-or-not.html",
