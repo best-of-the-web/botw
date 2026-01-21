@@ -1,5 +1,18 @@
 [
-
+  {
+    "title": "CRYSTAL PEPSI Employee Training Video (1992)",
+    "thumb": "https://img.youtube.com/vi/JJYsS82khTc/hqdefault.jpg",
+    "url": "https://youtu.be/JJYsS82khTc",
+    "category": "1990s",
+    "desc": ""
+  },   
+    {
+    "title": "Barstool Pizza Review - Joe & Pat's Pizzeria",
+    "thumb": "https://img.youtube.com/vi/i0Z65Ssb8g0/hqdefault.jpg",
+    "url": "https://youtu.be/i0Z65Ssb8g0",
+    "category": "Music",
+    "desc": ""
+  },   
 
   {
     "title": "Jim E. Brown - I've Been Barred from the Henry Tate Wetherspoons in Chorley",
@@ -10,12 +23,13 @@
   },   
   
   {
-    "title": "Here We Go Magic - "How Do I Know"",
+    "title": "Here We Go Magic - How Do I Know",
     "thumb": "https://img.youtube.com/vi/MqaMEMIBPIw/hqdefault.jpg",
     "url": "https://youtu.be/MqaMEMIBPIw",
     "category": "Music",
     "desc": ""
-  },   
+  }, 
+ 
   
   {
     "title": "Green Day - Boulevard of Broken Dreams - Smiley Face...",
